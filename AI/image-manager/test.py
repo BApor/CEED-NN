@@ -1,0 +1,6 @@
+print("The image path isn't following the next file architecture:")
+print("\t\t:")
+print("\t\t:")
+print("\t\t| image path")
+print("\t\t       | images")
+print("\t\t       | labels\n")
