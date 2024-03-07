@@ -1,27 +1,38 @@
 import cv2 as cv
 import os
 
-def process_images(path: str, dataset_path: str, to_size=(32, 32)):
+
+class Label:
+    def __init__(self, xtl: int, ytl: int, xbr: int, ybr: int):
+        self.xtl = xtl
+        self.xbr = xbr
+        self.ytl = ytl
+        self.ybr = ybr
+
+def process_images_of_type(seed_type: str, path: str, dataset_path: str, to_size=(0, 0)):
 
     # Checking if the directories are correctly given
 
     try:
         if not os.path.exists(path) and os.path.isdir(path):
-            print("Image Manager Error: The given IMAGE AND LABELS does not exists or is not a directory!")
+            print("Image Manager Error: The given IMAGE AND LABELS path does not exists or is not a directory!")
             return
     except OSError as e:
         print(f"Image Manager Error: {e}")
         return
 
+    type_path = f"{path}/{seed_type}"
+
     try:
-        if not os.path.exists(f"{path}/images") and os.path.isdir(f"{path}/images") \
-        or not os.path.exists(f"{path}/labels") and os.path.isdir(f"{path}/labels")        :
+        if not os.path.exists(f"{type_path}/images") and os.path.isdir(f"{type_path}/images") \
+        or not os.path.exists(f"{type_path}/labels") and os.path.isdir(f"{type_path}/labels"):
             print("Image Manager Error: The IMAGE AND LABELS isn't following the next file architecture:")
             print("\t\t:")
             print("\t\t:")
-            print("\t\t| image path")
-            print("\t\t       | images")
-            print("\t\t       | labels\n")
+            print("\t\t| image_and_labels_path")
+            print("\t\t       | seed_type")
+            print("\t\t             | images")
+            print("\t\t             | labels\n")
             return
     except OSError as e:
         print(f"Image Manager Error: {e}")
@@ -35,16 +46,13 @@ def process_images(path: str, dataset_path: str, to_size=(32, 32)):
         print(f"Image Manager Error: {e}")
         return
 
-    # Opening the images directory
-    image_dir = os.listdir(f"{path}/images")
-
     # Opening the labels directory
 
-    labels = None
+    xml_file = None
 
     try:
-        with open(f"{path}/labels/annotations.xml", "r") as xml_file:
-            labels = xml_file.read()
+        with open(f"{type_path}/labels/annotations.xml", "r") as file:
+            xml_file = file.read()
     except FileNotFoundError:
         print("Image Manager Error: The labels file annotations.xml in the given labels directory does not exist!")
         return
@@ -52,26 +60,53 @@ def process_images(path: str, dataset_path: str, to_size=(32, 32)):
         print(f"Image Manager Error: Unable to read the labels file annotations.xml! {e}")
         return
 
-    if labels is None:
+    if xml_file is None:
         print("Image Manager Error: The labels file annotations.xml is empty!")
         return
 
-    # Storing image names in a list
-    image_names = [file
-                   for file in image_dir
-                   if file.lower().endswith(('.png', '.jpg', '.jpeg', '.gif', '.bmp')) and
-                   file.lower().startswith('IMG')]
+    # Processing images
 
-    i = 0
-    for image_name in image_names:
-        image = cv.imread(f"{path}/images/{image_name}")
-        cv.imwrite(f"{str(i)}image.jpg", image)
-        i += 1
+    image = None
+    image_name = None
+    image_from_label_id = 1
 
-process_images("/Volumes/APORKA SSD/Allamvizsga/Program/CEED-NN/AI/plantseeds/3. Austrian Winter Pea", "/")
+    # Main cycle processes the .xml file
+    for row in xml_file.split('\n'):
+
+        # If the row is an image declaration the open image,
+        # else if it is a box then process image and export the labeled
+        if row.strip().lower().startswith('<image'):
+            image_name = row.split()[2].split('"')[1]
+            image = cv.imread(f"{type_path}/images/{image_name}")
+            continue
+        elif row.strip().lower().startswith('<box'):
+            row_array = row.split('"')
+
+            # Label coordinates
+            label = Label(int(float(row_array[7])), int(float(row_array[9])),
+                          int(float(row_array[11])), int(float(row_array[13])))
+
+            # Cutting out the labeled part
+            image_from_label = image[label.ytl:label.ybr, label.xtl:label.xbr]
+
+            # If to_size is given then resize the image
+            if to_size != (0, 0):
+                image_from_label = cv.resize(image_from_label, to_size)
+
+            # The absolute path to the seed type within the dataset
+            dataset_type_path = f"{dataset_path}/{seed_type}"
+            if not os.path.exists(dataset_type_path):
+                os.makedirs(dataset_type_path)
+
+            # Creating individual names for the label images using image_from_label_id
+            image_save_name = f"{image_name.split('.')[0]}_{image_from_label_id}.jpg"
+
+            # Saving the label image
+            cv.imwrite(f"{dataset_type_path}/{image_save_name}", image_from_label)
+            image_from_label_id += 1
 
 
-
-
-
-
+process_images_of_type("3. Austrian Winter Pea",
+                       "/Volumes/APORKA SSD/Allamvizsga/Program/CEED-NN/AI/plantseeds/",
+                       "/Volumes/APORKA SSD/Allamvizsga/Program/CEED-NN/AI/image-manager/datasets",
+                       (0, 0))
