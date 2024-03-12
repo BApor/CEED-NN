@@ -26,7 +26,7 @@ def is_directory(path: str, fun_name: str) -> bool:
             print(f"{path}{reset_text}")
             return True
     except OSError as e:
-        print(f"Image Manager Error - function {fun_name}: {e}")
+        print(f"{red_text}Image Manager Error - function {fun_name}: {e}{reset_text}")
         return True
 
     return False
@@ -57,7 +57,7 @@ def open_directories(path: str, fun_name: str):
         return [item for item in items if os.path.isdir(os.path.join(path, item))]
     except OSError as e:
         print(f"{red_text}Image Manager Error - function {fun_name}:"
-              f" Error reading directories in path {path}: {e}{reset_text}")
+              f"Error reading directories in path {path}: {e}{reset_text}")
         return None
 
 
@@ -90,47 +90,32 @@ def resize_to_size(seed_type: str, dataset_path: str, to_size: (int, int)):
         return
 
     # The path to the seed images
-    seed_type_path = f"{dataset_path}/{seed_type}"
+    seed_type_dataset_path = f"{dataset_path}/{seed_type}"
 
     # Opening images
-    images = open_images(seed_type_path, "resize_to_size")
+    images = open_images(seed_type_dataset_path, "resize_to_size")
     if images is None:
         return
 
     for image_name in images:
 
         # Opening the image
-        image = cv.imread(f"{seed_type_path}/{image_name}")
+        image = cv.imread(f"{seed_type_dataset_path}/{image_name}")
 
         # Resizing the image
         image = cv.resize(image, to_size)
 
         # Removing the non-resized image
-        os.remove(f"{seed_type_path}/{image_name}")
+        os.remove(f"{seed_type_dataset_path}/{image_name}")
 
         # Saving the resized image
-        cv.imwrite(f"{seed_type_path}/{image_name}", image)
+        cv.imwrite(f"{seed_type_dataset_path}/{image_name}", image)
 
-    print(f"Image Manager: Images successfully resized to size {to_size}!")
+    print(f"Image Manager - function resize_to_size: "
+          f"Images from dataset {seed_type} successfully resized to size {to_size[0]}x{to_size[1]}!")
 
 
-def resize_to_avg(seed_type: str, dataset_path: str):
-
-    # Checking if the directories are correctly given
-    if is_directory(dataset_path, "resize_to_avg"):
-        return
-
-    # Checking if the path is a dataset
-    if is_dataset(dataset_path, "resize_to_avg"):
-        return
-
-    # The path to the seed images
-    seed_type_path = f"{dataset_path}/{seed_type}"
-
-    # Opening images
-    images = open_images(seed_type_path, "resize_to_size")
-    if images is None:
-        return
+def calculate_avg_dimension(seed_type_dataset_path: str, images: list[str]) -> int:
 
     # Calculating the average dimension of the dataset images
 
@@ -138,33 +123,103 @@ def resize_to_avg(seed_type: str, dataset_path: str):
     avg_height = 0
 
     for image_name in images:
-        image = cv.imread(f"{seed_type_path}/{image_name}")
+        image = cv.imread(f"{seed_type_dataset_path}/{image_name}")
         height, width, _ = image.shape
         avg_width += width
         avg_height += height
 
-    avg_dim = int(((avg_width / len(images)) + (avg_height / len(images))) / 2)
+    return int(((avg_width / len(images)) + (avg_height / len(images))) / 2)
+
+
+def resize_to_type_avg(seed_type: str, dataset_path: str):
+
+    # Checking if the directories are correctly given
+    if is_directory(dataset_path, "resize_to_type_avg"):
+        return
+
+    # Checking if the path is a dataset
+    if is_dataset(dataset_path, "resize_to_type_avg"):
+        return
+
+    # The path to the seed images
+    seed_type_dataset_path = f"{dataset_path}/{seed_type}"
+
+    # Opening images
+    images = open_images(seed_type_dataset_path, "resize_to_type_avg")
+    if images is None:
+        return
+
+    avg_dim = calculate_avg_dimension(seed_type_dataset_path, images)
 
     # Resizing to the average dimension
     resize_to_size(seed_type, dataset_path, (avg_dim, avg_dim))
 
-def resize_dataset_all(dataset_path: str, to_size=(0, 0), to_avg=False):
+
+def resize_dataset_each(dataset_path: str, to_size=(0, 0), to_type_avg=False):
+
+    # Checking settings
+    if to_size == (0, 0) and not to_type_avg:
+        print(f"{red_text}Image Manager Error - function resize_dataset_each: "
+              f"Please choose resize setting: to_size and to_type_avg attributes cannot be both blank!{reset_text}")
+        return
 
     # Checking if the directories are correctly given
-    if is_directory(dataset_path, "resize_dataset_all"):
+    if is_directory(dataset_path, "resize_dataset_each"):
         return
 
     # Checking if the path is a dataset
-    if is_dataset(dataset_path, "resize_dataset_all"):
+    if is_dataset(dataset_path, "resize_dataset_each"):
         return
 
-    # Opening
-
-    directories = open_directories(dataset_path, "resize_dataset_all")
+    # Opening the directory
+    directories = open_directories(dataset_path, "resize_dataset_each")
     if directories is None:
         return
 
+    # Resizing each seed type dataset folder by the chosen setting
 
+    if not to_size == (0, 0):
+        for seed_type in directories:
+            resize_to_size(seed_type, dataset_path, to_size)
+        print("Image Manager - function resize_dataset_each: "
+              f"Each dataset resized to size {to_size[0]}x{to_size[1]}!")
+    elif to_type_avg:
+        for seed_type in directories:
+            resize_to_type_avg(seed_type, dataset_path)
+        print("Image Manager - function resize_dataset_each: "
+              "Each dataset resized to size of it's own type average!")
+
+
+def resize_to_dataset_avg(dataset_path: str):
+    # Checking if the directories are correctly given
+    if is_directory(dataset_path, "resize_to_dataset_avg"):
+        return
+
+    # Checking if the path is a dataset
+    if is_dataset(dataset_path, "resize_to_dataset_avg"):
+        return
+
+    # Opening the directory
+    directories = open_directories(dataset_path, "resize_to_dataset_avg")
+    if directories is None:
+        return
+
+    # Calculating the dataset average
+
+    dts_avg = 0
+
+    for seed_type in directories:
+        seed_type_dataset_path = f"{dataset_path}/{seed_type}"
+        images = open_images(seed_type_dataset_path, "resize_to_dataset_avg")
+        dts_avg += calculate_avg_dimension(seed_type_dataset_path, images)
+
+    dts_avg = int(dts_avg / len(directories))
+
+    print("Image Manager - function resize_to_dataset_avg: "
+          f"Average dimension of the datasets is {dts_avg}x{dts_avg}")
+
+    # Resizing each of the datasets
+    resize_dataset_each(dataset_path, to_size=(dts_avg, dts_avg))
 
 
 def process_images_of_type(seed_type: str, path: str, dataset_path: str, to_size=(0, 0)):
@@ -209,8 +264,8 @@ def process_images_of_type(seed_type: str, path: str, dataset_path: str, to_size
               f"The labels file annotations.xml in the given labels directory does not exist!{reset_text}")
         return
     except IOError as e:
-        print(f"Image Manager Error - function process_images_of_type: "
-              f"Unable to read the labels file annotations.xml! {e}")
+        print(f"{red_text}Image Manager Error - function process_images_of_type: "
+              f"Unable to read the labels file annotations.xml! {e}{reset_text}")
         return
 
     if xml_file is None:
@@ -259,7 +314,8 @@ def process_images_of_type(seed_type: str, path: str, dataset_path: str, to_size
             cv.imwrite(f"{dataset_type_path}/{image_save_name}", image_from_label)
             image_from_label_id += 1
 
-    print(f"Image Manager: Successfully processed plant seed type {seed_type}")
+    print("Image Manager - function process_images_of_type: "
+          f"Successfully processed plant seed type {seed_type}")
 
 
 def process_images_all(path: str, dataset_path: str, to_size=(0, 0)):
@@ -280,12 +336,5 @@ def process_images_all(path: str, dataset_path: str, to_size=(0, 0)):
     for directory in directories:
         process_images_of_type(directory, path, dataset_path, to_size)
 
-    print("Image Manager: Successfully processed all types!")
-
-
-process_images_of_type("3. Austrian Winter Pea",
-                       "/Volumes/APORKA SSD/Allamvizsga/Program/CEED-NN/AI/plantseeds",
-                       "/Volumes/APORKA SSD/Allamvizsga/Program/CEED-NN/AI/image-manager/datasets")
-
-resize_to_avg("3. Austrian Winter Pea",
-               "/Volumes/APORKA SSD/Allamvizsga/Program/CEED-NN/AI/image-manager/datasets")
+    print("Image Manager - function process_images_all: "
+          "Successfully processed all types!")
