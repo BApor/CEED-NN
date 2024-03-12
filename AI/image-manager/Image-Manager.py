@@ -254,8 +254,6 @@ def process_images_of_type(seed_type: str, path: str, dataset_path: str, to_size
 
     # Opening the labels directory
 
-    xml_file = None
-
     try:
         with open(f"{seed_type_path}/labels/annotations.xml", "r") as file:
             xml_file = file.read()
@@ -338,3 +336,6 @@ def process_images_all(path: str, dataset_path: str, to_size=(0, 0)):
 
     print("Image Manager - function process_images_all: "
           "Successfully processed all types!")
+
+resize_to_type_avg("3. Austrian Winter Pea",
+                   "/Volumes/APORKA SSD/Allamvizsga/Program/CEED-NN/AI/image-manager/datasets")
