@@ -4,7 +4,7 @@ import os
 # This program extracts the label from xml files
 
 try:
-    with open("/Volumes/APORKA SSD/Allamvizsga/Program/CEED-NN/AI/plantseeds/3. Austrian Winter Pea/labels/annotations.xml",
+    with open("/plantseeds/3. Austrian Winter Pea/labels/annotations.xml",
               "r") as file:
         read_xml_file = file.read()
 except FileNotFoundError:

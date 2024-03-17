@@ -16,7 +16,7 @@ write_xml_file = open("/plantseeds/3. Austrian Winter Pea/labels/annotations.xml
 for row in read_xml_file.split('\n'):
     if row.strip().lower().startswith('<box'):
         row_array = row.split('"')
-        row_array[1] = "3. Austrian Winter Pea"
+        row_array[1] = "Austrian Winter Pea"
         new_row = ""
         c = ''
         for part in row_array:
