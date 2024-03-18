@@ -1,14 +1,13 @@
 import torch
 import torch.nn as nn
 import torch.optim as optim
-import torchvision
 from torchvision import datasets, transforms
 from datetime import datetime
 
 from tools.resultsaving.ResultsManager import ResultsManager
 from tools.imageprocessing.ImageManager import ImageManager
 from tools.trainingassistent import TrainigAssistant as ta
-from FirstCNN import FirstCNN
+from MyCNN import FirstCNN
 
 # Yellow text messages are the messages of the Results Manager
 yellow_text = "\033[93m"
@@ -28,7 +27,9 @@ imman = ImageManager(images_path, dataset_path)
 
 # Create datasets
 imman.process_images_of_type("3. Austrian Winter Pea")
-imman.resize_to_dataset_avg()
+imman.process_images_of_type("0. Others")
+# imman.resize_to_dataset_avg()
+imman.resize_dataset_each(to_size=(150, 150))
 print()
 
 # Loading the datasets with normalization
@@ -39,7 +40,7 @@ train_set = datasets.ImageFolder(dataset_path,
                              transforms.Normalize(mean, std_deviation)]))
 
 # Declaring the train loader
-train_loader = torch.utils.data.DataLoader(train_set, batch_size=32,
+train_loader = torch.utils.data.DataLoader(train_set, batch_size=150,
                                            shuffle=True, num_workers=0)
 
 # Declaring an instance of the Results Manager tool,
@@ -55,7 +56,7 @@ criterion = nn.CrossEntropyLoss()
 optimizer = optim.SGD(net.parameters(), lr=0.001, momentum=0.9)
 
 # Training
-for epoch in range(5):
+for epoch in range(20):
     print(f'{yellow_text}{epoch + 1}. epoch of training!{reset_text}')
     running_loss = 0.0
     total_accuracy = 0.0
@@ -85,7 +86,7 @@ print("Train finished!\n")
 
 # Saving the models in different formats
 reman.save_net_pth(net)
-reman.save_net_onnx(net, 193, 193, 3, 1)
+reman.save_net_onnx(net, 150, 150, 3, 1)
 print()
 
 print(f'{yellow_text}Final accuracy after {epoch + 1} epochs: {epoch_accuracy:.3f}{reset_text}')

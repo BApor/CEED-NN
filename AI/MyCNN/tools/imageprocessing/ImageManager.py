@@ -66,7 +66,7 @@ def open_images(path: str, fun_name: str):
 
     try:
         items = os.listdir(path)
-        return [entry for entry in items if entry.lower().endswith('.jpg') and not entry.startswith('._IMG')]
+        return [entry for entry in items if entry.lower().endswith('.jpg') and not entry.startswith('._')]
     except OSError as e:
         print(f"{red_text}Image Manager Error - function {fun_name}:"
               f" Error reading plant seed images in path {path}: {e}{reset_text}")
@@ -117,7 +117,7 @@ class ImageManager:
         print(f"{blue_text}Image Manager - function resize_to_size: "
               f"Images from dataset {seed_type} successfully resized to size {to_size[0]}x{to_size[1]}!{reset_text}")
 
-    def calculate_avg_dimension(self, seed_type: str, images: list[str]) -> int:
+    def calculate_avg_dimension(self, seed_type: str, images: list[str]) -> (int, int):
 
         # Calculating the average dimension of the dataset images
 
@@ -130,7 +130,7 @@ class ImageManager:
             avg_width += width
             avg_height += height
 
-        return int(((avg_width / len(images)) + (avg_height / len(images))) / 2)
+        return (int(avg_width / len(images))), int((avg_height / len(images)))
 
     def resize_to_type_avg(self, seed_type: str):
 
@@ -145,12 +145,12 @@ class ImageManager:
         avg_dim = self.calculate_avg_dimension(seed_type, images)
 
         # Resizing to the average dimension
-        self.resize_to_size(seed_type, (avg_dim, avg_dim))
+        self.resize_to_size(seed_type, avg_dim)
 
     def resize_dataset_each(self, to_size=(0, 0), to_type_avg=False):
 
         # Checking settings
-        if (to_size[0] == 0 or to_size[1] == 0) and (not to_type_avg):
+        if (to_size[0] == 0 and to_size[1] == 0) and (not to_type_avg):
             print(f"{red_text}Image Manager Error - function resize_dataset_each: "
                   f"Please choose resize setting: to_size and to_type_avg attributes cannot be both blank!{reset_text}")
             return
@@ -163,6 +163,18 @@ class ImageManager:
         # Resizing each seed type dataset folder by the chosen setting
 
         if not to_size == (0, 0):
+            datasets_avg = (0, 0)
+            for seed_type in directories:
+                seed_type_dataset_path = f"{self.datasets_path}/{seed_type}"
+                images = open_images(seed_type_dataset_path, "resize_dataset_each")
+                if images is None:
+                    return
+                datasets_avg = tuple(x + y for x, y in zip(datasets_avg, self.calculate_avg_dimension(seed_type, images)))
+            datasets_avg = tuple(x / y for x, y in zip(datasets_avg, (len(directories), len(directories))))
+            if datasets_avg == to_size:
+                print(f"{blue_text}Image Manager - function resize_dataset_each: "
+                      f"The datasets are already {to_size[0]}x{to_size[1]}!{reset_text}")
+                return
             for seed_type in directories:
                 self.resize_to_size(seed_type, to_size)
             print(f"{blue_text}Image Manager - function resize_dataset_each: "
@@ -205,6 +217,10 @@ class ImageManager:
         if os.path.exists(f"{self.datasets_path}/{seed_type}"):
             print(f"{blue_text}Image Manager - function process_images_of_type: "
                   f"Seed type {seed_type} is already processed!{reset_text}")
+            return
+
+        print(f"{blue_text}Image Manager - function process_images_of_type: "
+              f"Processing images of seed type {seed_type}...{reset_text}")
 
         # Checking if the directory hierarchy is correct
 

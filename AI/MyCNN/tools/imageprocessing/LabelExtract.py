@@ -3,17 +3,17 @@ import os
 
 # This program extracts the label from xml files
 
+read_path = "/Volumes/APORKA SSD/Allamvizsga/Program/CEED-NN/AI/plantseeds/3. Austrian Winter Pea/labels/annotations.xml"
+write_path = "/Volumes/APORKA SSD/Allamvizsga/Program/CEED-NN/AI/plantseeds/3. Austrian Winter Pea/labels/onlylabels.xml"
+
 try:
-    with open("/plantseeds/3. Austrian Winter Pea/labels/annotations.xml",
-              "r") as file:
+    with open(read_path, "r") as file:
         read_xml_file = file.read()
 except FileNotFoundError:
     print("read file error")
     exit(1)
 
-write_xml_file = open("/Volumes/APORKA SSD/Allamvizsga/Program/CEED-NN/AI/plantseeds/3. Austrian Winter Pea/labels/onlylabels.xml",
-                      "w")
-
+write_xml_file = open(write_path, "w")
 
 for row in read_xml_file.split('\n'):
     if ((row.strip().lower().startswith('<box') or row.strip().lower().startswith('</box>'))

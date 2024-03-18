@@ -1,4 +1,5 @@
 import torch
+import torch.onnx as onnx
 import torch.nn as nn
 import matplotlib.pyplot as plt
 import numpy as np
@@ -136,9 +137,7 @@ class ResultsManager:
     def save_net_onnx(self, net: nn.Module, img_width: int, img_height: int, img_channel: int, img_batch: int):
         net.load_state_dict(torch.load(f"{self.current_result_models}/{self.current_train_name}.pth"))
         img_input = torch.randn(img_batch, img_channel, img_width, img_height)
-        torch.onnx.export(net, img_input, f"{self.current_result_models}/{self.current_train_name}.onnx", verbose=True)
-        subprocess.run(f"mo --input_model {self.current_result_models}/{self.current_train_name}.onnx --output_dir"
-                            f" {self.current_result_models}", shell=True)
+        onnx.export(net, img_input, f"{self.current_result_models}/{self.current_train_name}.onnx", verbose=True)
         print(f"{purple_text}Results Manager - function save_net_onnx: "
-              f"Successfully saved the trained network into onnx formats!{reset_text}")
+              f"Successfully saved the trained network into onnx format!{reset_text}")
 
