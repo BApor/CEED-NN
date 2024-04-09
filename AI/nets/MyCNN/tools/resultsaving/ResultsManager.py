@@ -35,7 +35,7 @@ def is_directory(path: str):
 # Function for checking if a given directory is dataset directory
 def is_results(datasets_path: str):
     if datasets_path.split('/')[len(datasets_path.split('/')) - 1] != "results":
-        return ("The given path isn't a dataset! It should be named .../datasets" +
+        return ("The given path isn't a dataset! It should be named .../data" +
                   f"{datasets_path}")
     return None
 

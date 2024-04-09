@@ -1,11 +1,11 @@
 # Datasets
 .idea
-AI/MyCNN/plantseeds
-AI/MyCNN/bestmodels
+AI/data
+AI/nets/MyCNN/bestmodels
 pythonProject
-AI/MyCNN/training/datasets
-AI/MyCNN/training/predict
-AI/MyCNN/training/results
+AI/nets/MyCNN/training/datasets
+AI/nets/MyCNN/training/predict
+AI/nets/MyCNN/training/results
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

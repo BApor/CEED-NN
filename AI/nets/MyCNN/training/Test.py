@@ -7,7 +7,7 @@ from PIL import Image
 
 from MyCNN import FirstCNN
 
-dataset_path = "/Volumes/APORKA SSD/Allamvizsga/Program/CEED-NN/AI/training/firstCNN/datasets"
+dataset_path = "/Volumes/APORKA SSD/Allamvizsga/Program/CEED-NN/AI/training/firstCNN/data"
 
 # Define the transformations
 mean, std_deviation = (0.5, 0.5, 0.5), (0.5, 0.5, 0.5)

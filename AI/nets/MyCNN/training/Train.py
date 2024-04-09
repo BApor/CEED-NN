@@ -18,21 +18,21 @@ reset_text = "\033[0m"
 # Creating variables for the tools
 
 training_time = datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
-dataset_path = "/Volumes/APORKA SSD/Allamvizsga/Program/CEED-NN/AI/training/firstCNN/datasets"
+dataset_path = "/Volumes/APORKA SSD/Allamvizsga/Program/CEED-NN/AI/training/firstCNN/data"
 images_path = "/Volumes/APORKA SSD/Allamvizsga/Program/CEED-NN/AI/plantseeds"
 results_path = "/Volumes/APORKA SSD/Allamvizsga/Program/CEED-NN/AI/training/firstCNN/results"
 
 # Declaring instances of the Image Manager tool
 imman = ImageManager(images_path, dataset_path)
 
-# Create datasets
+# Create data
 imman.process_images_of_type("3. Austrian Winter Pea")
 imman.process_images_of_type("0. Others")
 # imman.resize_to_dataset_avg()
 imman.resize_dataset_each(to_size=(150, 150))
 print()
 
-# Loading the datasets with normalization
+# Loading the data with normalization
 mean, std_deviation = (0.5, 0.5, 0.5), (0.5, 0.5, 0.5)
 train_set = datasets.ImageFolder(dataset_path,
                 transform=transforms.Compose(
@@ -91,7 +91,7 @@ print()
 
 print(f'{yellow_text}Final accuracy after {epoch + 1} epochs: {epoch_accuracy:.3f}{reset_text}')
 
-# Clearing datasets
+# Clearing data
 # imman.wipe_datasets()
 
 

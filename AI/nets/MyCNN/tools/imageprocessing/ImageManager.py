@@ -41,8 +41,8 @@ def is_dataset(datasets_path: str):
 
     # Checking if a given directory is dataset directory
 
-    if datasets_path.split('/')[len(datasets_path.split('/')) - 1] != "datasets":
-        return ("The given path isn't a dataset! It should be named .../datasets" +
+    if datasets_path.split('/')[len(datasets_path.split('/')) - 1] != "data":
+        return ("The given path isn't a dataset! It should be named .../data" +
                   f"{datasets_path}")
     return None
 
@@ -173,7 +173,7 @@ class ImageManager:
             datasets_avg = tuple(x / y for x, y in zip(datasets_avg, (len(directories), len(directories))))
             if datasets_avg == to_size:
                 print(f"{blue_text}Image Manager - function resize_dataset_each: "
-                      f"The datasets are already {to_size[0]}x{to_size[1]}!{reset_text}")
+                      f"The data are already {to_size[0]}x{to_size[1]}!{reset_text}")
                 return
             for seed_type in directories:
                 self.resize_to_size(seed_type, to_size)
@@ -204,9 +204,9 @@ class ImageManager:
         dts_avg = int(dts_avg / len(directories))
 
         print(f"{blue_text}Image Manager - function resize_to_dataset_avg: "
-              f"Average dimension of the datasets is {dts_avg}x{dts_avg}{reset_text}")
+              f"Average dimension of the data is {dts_avg}x{dts_avg}{reset_text}")
 
-        # Resizing each of the datasets
+        # Resizing each of the data
         self.resize_dataset_each(to_size=(dts_avg, dts_avg))
 
     def process_images_of_type(self, seed_type: str):
