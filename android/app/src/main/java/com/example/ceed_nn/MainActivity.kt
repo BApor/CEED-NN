@@ -1,5 +1,7 @@
 package com.example.ceed_nn
 
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
@@ -15,7 +17,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        supportActionBar?.setBackgroundDrawable(ColorDrawable(Color.parseColor("#FF000000")))
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
