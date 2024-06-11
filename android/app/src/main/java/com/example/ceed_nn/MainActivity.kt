@@ -17,7 +17,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        supportActionBar?.setBackgroundDrawable(ColorDrawable(Color.parseColor("#FF000000")))
+        supportActionBar?.setBackgroundDrawable(ColorDrawable(Color.parseColor("#FFCED993")))
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -27,7 +27,7 @@ class MainActivity : AppCompatActivity() {
 
         val appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.navigation_home, R.id.navigation_dashboard, R.id.navigation_notifications
+                R.id.navigation_home, R.id.navigation_details, R.id.navigation_catalog
             )
         )
         setupActionBarWithNavController(navController, appBarConfiguration)

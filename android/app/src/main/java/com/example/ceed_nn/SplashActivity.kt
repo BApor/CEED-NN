@@ -14,7 +14,7 @@ class SplashActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        supportActionBar?.setBackgroundDrawable(ColorDrawable(Color.parseColor("#FF000000")))
+        supportActionBar?.setBackgroundDrawable(ColorDrawable(Color.parseColor("#FFCED993")))
         setContentView(R.layout.activity_splash)
         Log.d(TAG, "onCreate: SplashActivity created.")
 
