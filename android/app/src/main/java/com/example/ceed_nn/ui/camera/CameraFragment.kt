@@ -68,6 +68,10 @@ class CameraFragment : Fragment() {
         return root
     }
 
+    private fun checkModelType() {
+        AiUtil.loadModel(requireContext(), "yolov8.ptl")
+    }
+
     private fun allPermissionsGranted() = arrayOf(Manifest.permission.CAMERA).all {
         ContextCompat.checkSelfPermission(
             requireContext(), it
@@ -96,9 +100,9 @@ class CameraFragment : Fragment() {
                 .build()
 
             imageAnalysis.setAnalyzer(cameraExecutor) { imageProxy ->
-
+                checkModelType()
+                processFrame(imageProxy)
             }
-
 
             try {
                 cameraProvider.bindToLifecycle(this, CameraSelector.DEFAULT_BACK_CAMERA,
@@ -119,7 +123,7 @@ class CameraFragment : Fragment() {
     }
 
     private fun processFrame(imageProxy: ImageProxy) {
-        AiUtil.loadModel(requireContext(), "yolov8.ptl")
+
     }
 
     private fun drawTestRec(imageProxy: ImageProxy) {

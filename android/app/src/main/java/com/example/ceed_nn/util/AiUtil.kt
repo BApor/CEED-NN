@@ -18,30 +18,25 @@ object AiUtil {
 
     fun loadModel( context: Context, ptLiteFile: String) {
         val file = File(context.filesDir, ptLiteFile)
-        if (!file.exists()) {
-            context.assets.open(ptLiteFile).use { inputStream ->
-                FileOutputStream(file).use { outputStream ->
-                    copyFile(inputStream, outputStream)
+        
+        try {
+            if (!file.exists()) {
+                context.assets.open(ptLiteFile).use { inputStream ->
+                    FileOutputStream(file).use { outputStream ->
+                        val buffer = ByteArray(4 * 1024)
+                        var read: Int
+                        while (inputStream.read(buffer).also { read = it } != -1) {
+                            outputStream.write(buffer, 0, read)
+                        }
+                        outputStream.flush()
+                    }
                 }
             }
+        } catch (ex: IOException) {
+            throw RuntimeException("Error process asset $ptLiteFile to file path")
         }
 
-        model = Module.load(file.absolutePath)
-
-
-    }
-
-
-    private fun copyAssetToFile(context: Context, assetName: String): String {
-        val file = File(context.filesDir, assetName)
-        if (!file.exists()) {
-            context.assets.open(assetName).use { inputStream ->
-                FileOutputStream(file).use { outputStream ->
-                    copyFile(inputStream, outputStream)
-                }
-            }
-        }
-        return file.absolutePath
+        model = LiteModuleLoader.load(file.absolutePath)
     }
 
     private fun copyFile(inputStream: InputStream, outputStream: FileOutputStream) {
