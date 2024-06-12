@@ -7,36 +7,25 @@
     android:background="@color/black"
     tools:context=".ui.camera.CameraFragment">
 
-    <androidx.camera.view.PreviewView
-        android:id="@+id/previewView"
-        android:layout_width="match_parent"
-        android:layout_height="500dp"
-        android:layout_gravity="center_vertical"
-        android:layout_weight="1"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="0dp" />
-
-    <ImageButton
-        android:id="@+id/imageButton"
-        android:layout_width="100dp"
-        android:layout_height="80dp"
+    <TextureView
+        android:id="@+id/textureView"
+        android:layout_width="1080px"
+        android:layout_height="1088px"
+        android:layout_gravity="center"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/previewView" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="MissingConstraints" />
 
-    <Switch
-        android:id="@+id/switch1"
+    <ImageView
+        android:id="@+id/imageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="23dp"
-        android:scaleX="2.5"
-        android:scaleY="2.5"
-        android:shadowColor="@color/white"
-        android:text="        Info"
-        android:textColor="@color/apptheme"
-        android:textSize="15sp"
-        android:thumbTint="@color/switch_color"
-        android:trackTint="@color/switch_color"
+        android:layout_gravity="center"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/previewView" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:visibility="visible"
+        tools:ignore="MissingConstraints" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

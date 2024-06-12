@@ -16,10 +16,4 @@
         android:name="com.example.ceed_nn.ui.details.DetailsFragment"
         android:label="@string/title_details"
         tools:layout="@layout/fragment_details" />
-
-    <fragment
-        android:id="@+id/navigation_catalog"
-        android:name="com.example.ceed_nn.ui.catalog.CatalogFragment"
-        android:label="@string/title_catalog"
-        tools:layout="@layout/fragment_catalog" />
 </navigation>

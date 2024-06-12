@@ -10,9 +10,4 @@
         android:icon="@drawable/details_icon"
         android:title="@string/title_details" />
 
-    <item
-        android:id="@+id/navigation_catalog"
-        android:icon="@drawable/catalog_icon"
-        android:title="@string/title_catalog" />
-
 </menu>
