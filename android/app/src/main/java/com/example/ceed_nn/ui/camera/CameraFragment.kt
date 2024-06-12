@@ -118,6 +118,10 @@ class CameraFragment : Fragment() {
     }
 
     private fun processFrame(imageProxy: ImageProxy) {
+
+    }
+
+    private fun drawTestRec(imageProxy: ImageProxy) {
         val width = imageProxy.width
         val height = imageProxy.height
         Log.d("CamerFra", "$height X $width")
