@@ -31,6 +31,7 @@ import androidx.annotation.OptIn
 import androidx.camera.core.AspectRatio
 import androidx.camera.core.ExperimentalGetImage
 import androidx.core.view.drawToBitmap
+import com.example.ceed_nn.util.AiUtil
 
 
 class CameraFragment : Fragment() {
@@ -118,7 +119,7 @@ class CameraFragment : Fragment() {
     }
 
     private fun processFrame(imageProxy: ImageProxy) {
-
+        AiUtil.loadModel(requireContext(), "yolov8.ptl")
     }
 
     private fun drawTestRec(imageProxy: ImageProxy) {

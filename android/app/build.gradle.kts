@@ -52,9 +52,10 @@ dependencies {
     implementation(libs.camerax.camera2)
     implementation(libs.camerax.lifecycle)
     implementation(libs.camerax.view)
-    implementation("com.microsoft.onnxruntime:onnxruntime-android:latest.release")
-    implementation("com.microsoft.onnxruntime:onnxruntime-extensions-android:latest.release")
-    implementation("com.quickbirdstudios:opencv:4.5.3.0")
+
+    implementation("org.pytorch:pytorch_android_lite:1.9.0")
+    implementation("org.pytorch:pytorch_android_torchvision:1.9.0")
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
