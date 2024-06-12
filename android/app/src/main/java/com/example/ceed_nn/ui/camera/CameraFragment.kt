@@ -32,6 +32,7 @@ import androidx.camera.core.AspectRatio
 import androidx.camera.core.ExperimentalGetImage
 import androidx.core.view.drawToBitmap
 import com.example.ceed_nn.util.AiUtil
+import com.example.ceed_nn.util.Result
 
 
 class CameraFragment : Fragment() {
@@ -42,6 +43,11 @@ class CameraFragment : Fragment() {
 
     companion object {
         private const val REQUEST_CAMERA_PERMISSION = 10
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        checkModelType()
     }
 
     override fun onCreateView(
@@ -100,7 +106,6 @@ class CameraFragment : Fragment() {
                 .build()
 
             imageAnalysis.setAnalyzer(cameraExecutor) { imageProxy ->
-                checkModelType()
                 processFrame(imageProxy)
             }
 
@@ -123,7 +128,29 @@ class CameraFragment : Fragment() {
     }
 
     private fun processFrame(imageProxy: ImageProxy) {
+        val width = imageProxy.width
+        val height = imageProxy.height
 
+        val bitmap = Bitmap.createBitmap(height, width, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+
+        val rectPaint = Paint().apply {
+            color = Color.RED
+            style = Paint.Style.STROKE
+            strokeWidth = 10f
+        }
+
+        val results = AiUtil.detect(imageProxy)
+
+        for(result: Result in results) {
+            canvas.drawRect(result.rect, rectPaint)
+        }
+
+        binding.imageView.post {
+            binding.imageView.setImageBitmap(bitmap)
+        }
+
+        imageProxy.close()
     }
 
     private fun drawTestRec(imageProxy: ImageProxy) {
