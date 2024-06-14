@@ -134,7 +134,7 @@ def image_to_tensor(image_path, target_size=(640, 640)):
 
 
 
-torchscript_model = torch.jit.load("/Volumes/APORKA SSD/Allamvizsga/Program/CEED-NN/ai/models/yolov8/yolov8.torchscript")
+torchscript_model = torch.jit.load("/Volumes/APORKA SSD/Allamvizsga/Program/CEED-NN/ai/models/yolov3/best3.torchscript")
 w_model_2 = WrapperModel2(torchscript_model) # or in attempt 5, using WrapperModel(model)
 input_tensor = image_to_tensor("/Volumes/APORKA SSD/Allamvizsga/Program/CEED-NN/ai/converters/IMG_4386.JPG")
 
@@ -146,4 +146,4 @@ print(w_p2[selected2])
 
 scripted_wrapped_model2 = torch.jit.script(w_model_2)
 optimized_torchscript_b4_nms_model = optimize_for_mobile(scripted_wrapped_model2)
-optimized_torchscript_b4_nms_model.save("yolov8_xbs.ptl")
+optimized_torchscript_b4_nms_model.save("yolov3_xbs.pth")
