@@ -1,0 +1,27 @@
+path: /Volumes/APORKA SSD/Allamvizsga/Docker/train/datasets/yolo_dataset
+train: obj_train_data
+val: obj_valid_data
+names:
+  0: Reference_0
+  1: Red_Clover_1
+  2: Common_Pea_2
+  3: Austrian_Winter_Pea_3
+  4: Marrowfat_Pea_4
+  5: Sugar_Beet_5
+  6: Chickpea_6
+  7: Buckwheat_7
+  8: Orange_Corn_8
+  9: Sweet_Corn_9
+  10: Faba_Bean_10
+  11: Soybean_11
+  12: Common_Wheat_12
+  13: Hairy_Vetch_13
+  14: Sunflower_14
+  15: Oat_15
+  16: Carrot_16
+  17: Mustard_17
+  18: Oil_Radish_18
+  19: Rye_19
+  20: Malted_Barley_20
+  21: Sorghum_21
+

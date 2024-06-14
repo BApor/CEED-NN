@@ -26,9 +26,8 @@ import android.util.Size
 import android.view.Surface
 import android.widget.Button
 import androidx.camera.core.CameraControl
-import com.example.ceed_nn.util.PostProcessor
-import com.example.ceed_nn.util.PytorchLite
-import com.example.ceed_nn.util.PytorchMobile
+import com.example.ceed_nn.ai.PostProcessor
+import com.example.ceed_nn.ai.PytorchMobile
 
 
 class CameraFragment : Fragment() {
@@ -79,8 +78,7 @@ class CameraFragment : Fragment() {
     }
 
     private fun checkModelType() {
-        PytorchLite.loadModel(requireContext(), "yolov8_nms.ptl")
-        PytorchMobile.loadModel(requireContext(), "yolov8_nms.pth")
+        PytorchMobile.loadModel(requireContext(), "yolov8_xbs.pth")
     }
 
     private fun allPermissionsGranted() = arrayOf(Manifest.permission.CAMERA).all {
@@ -111,7 +109,6 @@ class CameraFragment : Fragment() {
 
             imageAnalysis.setAnalyzer(cameraExecutor) { imageProxy ->
                 processFrame(imageProxy)
-//                drawTestRec(imageProxy)
             }
 
             try {
@@ -152,8 +149,7 @@ class CameraFragment : Fragment() {
             textAlign = Paint.Align.LEFT
         }
 
-        val results = PytorchMobile.detect(requireContext(), imageProxy)
-//        PtlUtil.detect(imageProxy)
+        val results = PytorchMobile.detect(imageProxy)
 
         for(result: PostProcessor.DetectResult in results) {
             canvas.drawRect(result.boundingBox, rectPaint)
