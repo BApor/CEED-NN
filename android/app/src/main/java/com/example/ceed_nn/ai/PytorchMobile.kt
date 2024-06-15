@@ -40,8 +40,9 @@ object PytorchMobile {
     }
 
 
-    fun detect (imageProxy: ImageProxy) : List<PostProcessor.DetectResult>{
+    fun detect (imageProxy: ImageProxy) : List<NonMaxSuppression.DetectResult>{
         val bitmap: Bitmap = rotateBitmap(imageProxy.toBitmap(), 90f)
+
         val resizedBitmap = Bitmap.createScaledBitmap(
             bitmap,
             640,
@@ -61,19 +62,17 @@ object PytorchMobile {
             val (_x, _, _) = model.forward(IValue.from(inputTensor)).toTuple()
             x = _x
         } catch (exc: Exception) {
-            Log.d("PytorchUtil", "Didnt found")
-            val emptyDetectResultList: List<PostProcessor.DetectResult> = listOf()
+            Log.d("PytorchMobile", "Null")
+            val emptyDetectResultList: List<NonMaxSuppression.DetectResult> = listOf()
             return emptyDetectResultList
         }
 
-        val imgScaleX = bitmap.width.toFloat() / 640
-        val imgScaleY = bitmap.height.toFloat() / 640
+        val imgToUiScale = 1080f / 640f
 
-        return PostProcessor.nmsAndResizedRects(
+        return NonMaxSuppression.nms(
             x.toTensor(),
             0.45f,
-            imgScaleX,
-            imgScaleY
+            imgToUiScale
         )
     }
 
@@ -82,5 +81,4 @@ object PytorchMobile {
         matrix.postRotate(angle)
         return Bitmap.createBitmap(source, 0, 0, source.width, source.height, matrix, true)
     }
-
 }

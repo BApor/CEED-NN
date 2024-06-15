@@ -10,7 +10,7 @@
     <TextureView
         android:id="@+id/textureView"
         android:layout_width="1080px"
-        android:layout_height="1088px"
+        android:layout_height="1080px"
         android:layout_gravity="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -22,22 +22,51 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:visibility="visible"
         tools:ignore="MissingConstraints" />
 
-    <Button
-        android:id="@+id/flashToggleButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="68dp"
-        android:text="Toggle Flash"
+    <Switch
+        android:id="@+id/flash_switch"
+        android:layout_width="132dp"
+        android:layout_height="61dp"
+        android:layout_marginTop="40dp"
+        android:scaleX="1.5"
+        android:scaleY="1.5"
+        android:text="     Flash"
+        android:textColor="@color/white"
+        android:textSize="22sp"
+        android:thumbTint="@color/white"
+        android:trackTint="@color/apptheme"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textureView"
-        tools:layout_editor_absoluteX="0dp"
-        tools:ignore="MissingConstraints" />
+        tools:ignore="HardcodedText,MissingConstraints,UseSwitchCompatOrMaterialXml" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="166dp"
+        android:layout_height="51dp"
+        android:layout_marginTop="12dp"
+        android:text="0"
+        android:textColor="@color/white"
+        android:textSize="22sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/flash_switch"
+        tools:ignore="HardcodedText" />
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="166dp"
+        android:layout_height="51dp"
+        android:layout_marginTop="112dp"
+        android:text="TextView"
+        android:textSize="22sp"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textureView"
+        tools:ignore="HardcodedText" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

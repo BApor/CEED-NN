@@ -3,18 +3,19 @@ package com.example.ceed_nn.ai
 import android.graphics.Rect
 import org.pytorch.Tensor
 
-object PostProcessor {
+object NonMaxSuppression {
 
     data class DetectResult(
-        val boundingBox: Rect,
-        val classId: Int,
-        val score: Float,
+        var boundingBox: Rect,
+        var classId: Int,
+        var score: Float
     )
 
-    fun nmsAndResizedRects(x: Tensor,
-                           threshold: Float,
-                           imgScaleX: Float,
-                           imgScaleY: Float): List<DetectResult> {
+    fun nms(
+       x: Tensor,
+       threshold: Float,
+       imgToUiScale: Float
+    ): List<DetectResult> {
         // x: [0:4] - box, [4] - score, [5] - class
         val data = x.dataAsFloatArray
         val numElem = x.shape()[0].toInt()
@@ -48,10 +49,11 @@ object PostProcessor {
                 val box = boxes.slice((i*4) until (i*4)+4)
                 val detection = DetectResult(
                     boundingBox = Rect(
-                        (box[0] * imgScaleX).toInt(),
-                        (box[1] * imgScaleX).toInt(),
-                        (box[2] * imgScaleX).toInt(),
-                        (box[3] * imgScaleX).toInt()),
+                        (box[0] * imgToUiScale).toInt(),
+                        (box[1] * imgToUiScale).toInt(),
+                        (box[2] * imgToUiScale).toInt(),
+                        (box[3] * imgToUiScale).toInt()
+                    ),
                     score = scores[i],
                     classId = classes[i].toInt())
                 result.add(detection)

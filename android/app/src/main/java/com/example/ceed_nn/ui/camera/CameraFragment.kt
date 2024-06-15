@@ -26,12 +26,14 @@ import android.util.Size
 import android.view.Surface
 import android.widget.Button
 import androidx.camera.core.CameraControl
-import com.example.ceed_nn.ai.PostProcessor
+import com.example.ceed_nn.ai.NonMaxSuppression
+import com.example.ceed_nn.ai.PropertiesProcessor
 import com.example.ceed_nn.ai.PytorchMobile
 
 
 class CameraFragment : Fragment() {
     private lateinit var cameraControl: CameraControl
+    private var referenceScale = 0f
 
     private var _binding: FragmentCameraBinding? = null
     private val binding get() = _binding!!
@@ -57,8 +59,8 @@ class CameraFragment : Fragment() {
         _binding = FragmentCameraBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val flashToggleButton: Button = binding.flashToggleButton
-        flashToggleButton.setOnClickListener {
+        val flashToggleSwitch: Button = binding.flashSwitch
+        flashToggleSwitch.setOnClickListener {
             toggleFlash()
         }
 
@@ -78,7 +80,7 @@ class CameraFragment : Fragment() {
     }
 
     private fun checkModelType() {
-        PytorchMobile.loadModel(requireContext(), "yolov8_xbs.pth")
+        PytorchMobile.loadModel(requireContext(), "yolov5_xbs.pth")
     }
 
     private fun allPermissionsGranted() = arrayOf(Manifest.permission.CAMERA).all {
@@ -103,7 +105,7 @@ class CameraFragment : Fragment() {
             }
 
             val imageAnalysis = ImageAnalysis.Builder()
-                .setTargetResolution(Size(1080, 1088))
+                .setTargetResolution(Size(2500, 2500))
                 .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
                 .build()
 
@@ -131,10 +133,7 @@ class CameraFragment : Fragment() {
     }
 
     private fun processFrame(imageProxy: ImageProxy) {
-        val width = imageProxy.width
-        val height = imageProxy.height
-
-        val bitmap = Bitmap.createBitmap(height, width, Bitmap.Config.ARGB_8888)
+        val bitmap = Bitmap.createBitmap(1080, 1080, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
 
         val rectPaint = Paint().apply {
@@ -149,13 +148,13 @@ class CameraFragment : Fragment() {
             textAlign = Paint.Align.LEFT
         }
 
-        val results = PytorchMobile.detect(imageProxy)
+        val detections = PytorchMobile.detect(imageProxy)
 
-        for(result: PostProcessor.DetectResult in results) {
-            canvas.drawRect(result.boundingBox, rectPaint)
-            val text = result.classId.toString()
-            val textX = result.boundingBox.left.toFloat()
-            val textY = result.boundingBox.top.toFloat() - 10
+        for(detection: NonMaxSuppression.DetectResult in detections) {
+            canvas.drawRect(detection.boundingBox, rectPaint)
+            val text = detection.classId.toString()
+            val textX = detection.boundingBox.left.toFloat()
+            val textY = detection.boundingBox.top.toFloat() - 10
             canvas.drawText(text, textX, textY, textPaint)
         }
 
@@ -163,7 +162,29 @@ class CameraFragment : Fragment() {
             binding.imageView.setImageBitmap(bitmap)
         }
 
+        if (detections.isNotEmpty())
+            calculatePropreties(detections, imageProxy)
+
         imageProxy.close()
+    }
+
+    fun calculatePropreties(detections: List<NonMaxSuppression.DetectResult>, imageProxy: ImageProxy) {
+        val newReferenceScale = 100f / PropertiesProcessor.calculateReferencePixels(detections)
+
+        if (referenceScale == 0f)
+            referenceScale = 100f / PropertiesProcessor.calculateReferencePixels(detections)
+        else if ((newReferenceScale != 0f)
+            && (((newReferenceScale / referenceScale * 100f) in 0f .. 5f)
+            || ((newReferenceScale / referenceScale * 100f) in 100f .. 105f)))
+            referenceScale = 100f / PropertiesProcessor.calculateReferencePixels(detections) // 10 milliméter, mert egy centimeter a referencianégyzet
+
+        val seedAreas = PropertiesProcessor.calculateSeedPixels(detections, imageProxy, referenceScale)
+
+
+        for (i in 0 until detections.size) {
+            if (detections[i].classId != 0)
+                binding.textView.text = "${detections[i].classId}: ${seedAreas[i]}"
+        }
     }
 
     override fun onRequestPermissionsResult(
