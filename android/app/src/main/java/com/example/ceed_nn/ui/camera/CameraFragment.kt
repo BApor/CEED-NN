@@ -28,9 +28,9 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
 import androidx.camera.core.CameraControl
-import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.ViewModelProvider
 import com.example.ceed_nn.R
-import com.example.ceed_nn.view.DetectionViewModel
+import com.example.ceed_nn.view.AppViewModel
 import com.example.ceed_nn.data.stuctures.DetectResult
 
 class CameraFragment : Fragment() {
@@ -42,7 +42,7 @@ class CameraFragment : Fragment() {
 
     private var isFlashOn = false
 
-    private val detectionViewModel: DetectionViewModel by activityViewModels()
+    private lateinit var appViewModel: AppViewModel
 
     companion object {
         private const val REQUEST_CAMERA_PERMISSION = 10
@@ -56,14 +56,14 @@ class CameraFragment : Fragment() {
 
         _binding = FragmentCameraBinding.inflate(inflater, container, false)
         val root: View = binding.root
+        appViewModel = ViewModelProvider(requireActivity()).get(AppViewModel::class.java)
 
         val flashToggleSwitch: Button = binding.flashSwitch
         flashToggleSwitch.setOnClickListener {
             toggleFlash()
         }
         configureSpinner()
-        detectionViewModel.setContext(requireContext())
-        detectionViewModel.setDetEngineModel(binding.modelSpinner.selectedItem.toString())
+        appViewModel.setDetEngineModel(binding.modelSpinner.selectedItem.toString())
 
         if (allPermissionsGranted()) {
             startCamera()
@@ -93,7 +93,7 @@ class CameraFragment : Fragment() {
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
                 val selectedItem = parent.getItemAtPosition(position).toString()
-                detectionViewModel.setDetEngineModel(selectedItem)
+                appViewModel.setDetEngineModel(selectedItem)
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
@@ -152,15 +152,10 @@ class CameraFragment : Fragment() {
             }, ContextCompat.getMainExecutor(requireContext()))
     }
 
-
-
     fun processFrame(imageProxy: ImageProxy) {
-        detectionViewModel.setCurrentFrame(imageProxy)
-        detectionViewModel.fetchDetections()
-        drawBoundingBoxes(imageProxy, detectionViewModel.getDetections())
-        detectionViewModel.calculateReferenceScale()
-
-        binding.textView.setText("${detectionViewModel.getReferenceScale()}")
+        appViewModel.setCurrentFrame(imageProxy)
+        appViewModel.fetchDetections()
+        drawBoundingBoxes(imageProxy, appViewModel.detections)
 
         imageProxy.close()
     }
@@ -177,7 +172,7 @@ class CameraFragment : Fragment() {
 
         val textPaint = Paint().apply {
             color = Color.GREEN
-            textSize = 60f
+            textSize = 50f
             textAlign = Paint.Align.LEFT
         }
 
@@ -188,10 +183,9 @@ class CameraFragment : Fragment() {
             val classTextY = detections[i].boundingBox.top.toFloat() - 10
             canvas.drawText(classText, classTextX, classTextY, textPaint)
 
-            val indexText = i.toString()
-            val indexTextX = detections[i].boundingBox.right.toFloat() - 10
+            val indexTextX = detections[i].boundingBox.right.toFloat() - 50
             val indexTextY = detections[i].boundingBox.top.toFloat() - 10
-            canvas.drawText(indexText, indexTextX, indexTextY, textPaint)
+            canvas.drawText(i.toString(), indexTextX, indexTextY, textPaint)
         }
 
         binding.imageView.post {

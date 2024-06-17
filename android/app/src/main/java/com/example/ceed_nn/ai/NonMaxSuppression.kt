@@ -1,5 +1,6 @@
 package com.example.ceed_nn.ai
 
+import android.graphics.Bitmap
 import android.graphics.Rect
 import com.example.ceed_nn.data.stuctures.DetectResult
 import org.pytorch.Tensor
@@ -53,7 +54,8 @@ object NonMaxSuppression {
                     ),
                     score = scores[i],
                     classId = classes[i].toInt(),
-                    seedArea = 0f)
+                    seedArea = 0f,
+                    photo = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888))
                 result.add(detection)
             }
         }

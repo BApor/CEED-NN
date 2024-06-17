@@ -1,5 +1,7 @@
 package com.example.ceed_nn.data.repositories
 
-class DetectionDetailsRepository {
+import android.content.Context
+
+class DetectionDetailsRepository(context: Context) {
 
 }
