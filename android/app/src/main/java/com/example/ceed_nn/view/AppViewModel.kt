@@ -17,6 +17,7 @@ class AppViewModel(application: Application) : AndroidViewModel(application){
 
     var detections: List<DetectResult> = emptyList()
     var referenceScale: Float  = 0f
+    var time = 0.0
 
     init {
         detectionRepository = DetectionRepository(application.applicationContext)
@@ -41,11 +42,10 @@ class AppViewModel(application: Application) : AndroidViewModel(application){
         if (reference != 0f)
             referenceScale = detectionRepository.getReferenceScale()
         detections = detectionRepository.getDetections()
+        time = detectionRepository.getTime()
     }
 
     // Detection details
-
-
 
 
 }

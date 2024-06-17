@@ -4,19 +4,22 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.util.Log
 import androidx.camera.core.ImageProxy
+import com.example.ceed_nn.data.stuctures.DetectResult
+import com.example.ceed_nn.help.PrePostProcessor
+import com.example.ceed_nn.util.ImageUtil
 import org.pytorch.IValue
 import org.pytorch.Module
 import org.pytorch.torchvision.TensorImageUtils
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
-import android.graphics.Matrix
-import com.example.ceed_nn.data.stuctures.DetectResult
-import com.example.ceed_nn.help.PrePostProcessor
-import com.example.ceed_nn.util.ImageUtil
+import java.text.DecimalFormat
+import kotlin.math.pow
+import kotlin.math.roundToInt
 
 class DetectionEngine(context: Context, modelName: String) {
     private var model: Module
+    private var modelTime: Double = 0.0
 
     init {
         var pthFile = ""
@@ -58,6 +61,8 @@ class DetectionEngine(context: Context, modelName: String) {
             true
         )
 
+        val startTime = System.nanoTime()
+
         val inputTensor = TensorImageUtils.bitmapToFloat32Tensor(
             resizedBitmap,
             PrePostProcessor.NO_MEAN_RGB,
@@ -75,6 +80,9 @@ class DetectionEngine(context: Context, modelName: String) {
             return emptyDetectResultList
         }
 
+        val endTime = System.nanoTime()
+        modelTime = ((endTime - startTime) / 1_000_000.0).roundTo(2)
+
         val imgToUiScale = 1080f / 640f
 
         return NonMaxSuppression.nms(
@@ -82,5 +90,14 @@ class DetectionEngine(context: Context, modelName: String) {
             0.45f,
             imgToUiScale
         )
+    }
+
+    fun Double.roundTo(numFractionDigits: Int): Double {
+        val factor = 10.0.pow(numFractionDigits.toDouble())
+        return (this * factor).roundToInt() / factor
+    }
+
+    fun getTime(): Double{
+        return modelTime
     }
 }

@@ -33,13 +33,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="28dp"
-        android:scaleX="1.2"
-        android:scaleY="1.2"
+        android:layout_marginEnd="24dp"
+        android:scaleX="1.5"
+        android:scaleY="1.5"
         android:text="     Flash"
         android:textColor="@color/white"
         android:textSize="22sp"
-        android:thumbTint="@color/white"
-        android:trackTint="@color/apptheme"
+        android:thumbTint="@color/switch_color"
+        android:trackTint="@color/switch_color"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textureView"
         tools:ignore="HardcodedText,MissingConstraints,UseSwitchCompatOrMaterialXml" />
@@ -49,39 +50,55 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="28dp"
-        android:scaleX="1.2"
-        android:scaleY="1.2"
-        android:text="   BBoxes"
+        android:scaleX="1.5"
+        android:scaleY="1.5"
+        android:text="      BBoxes"
         android:textColor="@color/white"
         android:textSize="22sp"
-
-        android:thumbTint="@color/white"
-        android:trackTint="@color/apptheme"
+        android:thumbTint="@color/switch_color"
+        android:trackTint="@color/switch_color"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textureView"
         tools:ignore="HardcodedText,MissingConstraints,UseSwitchCompatOrMaterialXml" />
 
     <Spinner
         android:id="@+id/modelSpinner"
-        android:layout_width="191dp"
-        android:layout_height="51dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_centerInParent="true"
+        android:background="@color/apptheme"
+        android:backgroundTint="@color/apptheme"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView"
+        app:layout_constraintTop_toBottomOf="@+id/bboxSwitch"
+        app:layout_constraintVertical_bias="0.364" />
+
+
+    <TextView
+        android:id="@+id/fpsTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="108dp"
+        android:layout_marginEnd="24dp"
+        android:text="fps"
+        android:textColor="@color/white"
+        android:textSize="26sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textureView"
         tools:ignore="MissingConstraints" />
 
     <TextView
-        android:id="@+id/textView"
-        android:layout_width="220dp"
-        android:layout_height="28dp"
-        android:text="TextView"
+        android:id="@+id/msTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:layout_marginEnd="24dp"
+        android:text="ms"
         android:textColor="@color/white"
+        android:textSize="26sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteY="496dp" />
+        app:layout_constraintTop_toBottomOf="@+id/fpsTextView"
+        tools:ignore="MissingConstraints" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

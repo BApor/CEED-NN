@@ -41,6 +41,7 @@ class CameraFragment : Fragment() {
     private lateinit var cameraExecutor: ExecutorService
 
     private var isFlashOn = false
+    private var isBBoxesEnabled = false
 
     private lateinit var appViewModel: AppViewModel
 
@@ -62,6 +63,12 @@ class CameraFragment : Fragment() {
         flashToggleSwitch.setOnClickListener {
             toggleFlash()
         }
+
+        val bboxesToggleSwitch: Button = binding.bboxSwitch
+        bboxesToggleSwitch.setOnClickListener {
+            toggleBBoxes()
+        }
+
         configureSpinner()
         appViewModel.setDetEngineModel(binding.modelSpinner.selectedItem.toString())
 
@@ -78,6 +85,15 @@ class CameraFragment : Fragment() {
         cameraExecutor = Executors.newSingleThreadExecutor()
 
         return root
+    }
+
+    private fun toggleFlash() {
+        isFlashOn = !isFlashOn
+        cameraControl.enableTorch(isFlashOn)
+    }
+
+    private fun toggleBBoxes() {
+        isBBoxesEnabled = !isBBoxesEnabled
     }
 
     private fun configureSpinner() {
@@ -153,9 +169,23 @@ class CameraFragment : Fragment() {
     }
 
     fun processFrame(imageProxy: ImageProxy) {
+
+        // Detections
+
         appViewModel.setCurrentFrame(imageProxy)
         appViewModel.fetchDetections()
-        drawBoundingBoxes(imageProxy, appViewModel.detections)
+
+
+        requireActivity().runOnUiThread {
+            if (isBBoxesEnabled)
+                drawBoundingBoxes(imageProxy, appViewModel.detections)
+            else
+                binding.imageView.setImageResource(0)
+
+            val modelTime = appViewModel.time
+            binding.msTextView.setText("${modelTime.toFloat()} ms")
+            // binding.fpsTextView.setText("${1000.0 / modelTime.toFloat()} fps")
+        }
 
         imageProxy.close()
     }
@@ -183,7 +213,7 @@ class CameraFragment : Fragment() {
             val classTextY = detections[i].boundingBox.top.toFloat() - 10
             canvas.drawText(classText, classTextX, classTextY, textPaint)
 
-            val indexTextX = detections[i].boundingBox.right.toFloat() - 50
+            val indexTextX = detections[i].boundingBox.right.toFloat() - 40
             val indexTextY = detections[i].boundingBox.top.toFloat() - 10
             canvas.drawText(i.toString(), indexTextX, indexTextY, textPaint)
         }
@@ -205,12 +235,6 @@ class CameraFragment : Fragment() {
                 Log.e("CameraFragment", "Camera permission not granted")
         }
     }
-
-    private fun toggleFlash() {
-        isFlashOn = !isFlashOn
-        cameraControl.enableTorch(isFlashOn)
-    }
-
 
     override fun onPause() {
         super.onPause()

@@ -20,6 +20,7 @@ class DetectionRepository(private var context: Context) {
     private var referenceCounter = 0
     private val referenceNumber = 10
     private var newReferenceScale = 0f
+    private var time = 0.0
 
 
     fun setDetEngineModel(model: String) {
@@ -32,6 +33,7 @@ class DetectionRepository(private var context: Context) {
 
     fun fetchDetections() {
         detections = detEngine.detect(image)
+        time = detEngine.getTime()
     }
 
     fun getDetections(): List<DetectResult>  {
@@ -40,6 +42,10 @@ class DetectionRepository(private var context: Context) {
 
     fun getReferenceScale(): Float {
         return referenceScale
+    }
+
+    fun getTime(): Double {
+        return time
     }
 
     private fun calculateReferencePixels() : Int{
@@ -66,6 +72,10 @@ class DetectionRepository(private var context: Context) {
             val top = detections[i].boundingBox.top
             val width = detections[i].boundingBox.width()
             val height = detections[i].boundingBox.height()
+
+            if (left < 0 || top < 0 || width < 0 || height < 0 ||
+                (left + width) > bitmap.width )
+                continue
 
             val detectionCrop = Bitmap.createBitmap(bitmap, left, top, width, height)
 
