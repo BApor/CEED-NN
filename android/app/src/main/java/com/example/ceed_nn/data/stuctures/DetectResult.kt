@@ -1,4 +1,4 @@
-package com.example.ceed_nn.ai
+package com.example.ceed_nn.data.stuctures
 
 import android.graphics.Rect
 

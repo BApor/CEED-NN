@@ -11,16 +11,26 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import android.graphics.Matrix
+import com.example.ceed_nn.data.stuctures.DetectResult
 import com.example.ceed_nn.help.PrePostProcessor
+import com.example.ceed_nn.util.ImageUtil
 
-object PytorchMobile {
-    private lateinit var model: Module
+class DetectionEngine(context: Context, modelName: String) {
+    private var model: Module
 
-    fun loadModel(context: Context, ptLiteFile: String) {
-        val file = File(context.filesDir, ptLiteFile)
+    init {
+        var pthFile = ""
+        if (modelName == "YOLOv3")
+            pthFile = "yolov3_xbs.pth"
+        if (modelName == "YOLOv5")
+            pthFile = "yolov5_xbs.pth"
+        if (modelName == "YOLOv8")
+            pthFile = "yolov8_xbs.pth"
+
+        val file = File(context.filesDir, pthFile)
         try {
             if (!file.exists()) {
-                context.assets.open(ptLiteFile).use { inputStream ->
+                context.assets.open(pthFile).use { inputStream ->
                     FileOutputStream(file).use { outputStream ->
                         val buffer = ByteArray(4 * 1024)
                         var read: Int
@@ -32,16 +42,14 @@ object PytorchMobile {
                 }
             }
         } catch (ex: IOException) {
-            throw RuntimeException("Error process asset $ptLiteFile to file path")
+            throw RuntimeException("Error process asset $pthFile to file path")
         }
-
-
         model = Module.load(file.absolutePath)
     }
 
 
     fun detect (imageProxy: ImageProxy) : List<DetectResult>{
-        val bitmap: Bitmap = rotateBitmap(imageProxy.toBitmap(), 90f)
+        val bitmap: Bitmap = ImageUtil.rotateBitmap(imageProxy.toBitmap(), 90f)
 
         val resizedBitmap = Bitmap.createScaledBitmap(
             bitmap,
@@ -74,11 +82,5 @@ object PytorchMobile {
             0.45f,
             imgToUiScale
         )
-    }
-
-    fun rotateBitmap(source: Bitmap, angle: Float): Bitmap {
-        val matrix = Matrix()
-        matrix.postRotate(angle)
-        return Bitmap.createBitmap(source, 0, 0, source.width, source.height, matrix, true)
     }
 }

@@ -1,6 +1,7 @@
 package com.example.ceed_nn.ai
 
 import android.graphics.Rect
+import com.example.ceed_nn.data.stuctures.DetectResult
 import org.pytorch.Tensor
 
 object NonMaxSuppression {
