@@ -10,7 +10,7 @@
     <TextureView
         android:id="@+id/textureView"
         android:layout_width="1080px"
-        android:layout_height="1080px"
+        android:layout_height="1088px"
         android:layout_gravity="center"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

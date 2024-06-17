@@ -40,7 +40,7 @@ object PytorchMobile {
     }
 
 
-    fun detect (imageProxy: ImageProxy) : List<NonMaxSuppression.DetectResult>{
+    fun detect (imageProxy: ImageProxy) : List<DetectResult>{
         val bitmap: Bitmap = rotateBitmap(imageProxy.toBitmap(), 90f)
 
         val resizedBitmap = Bitmap.createScaledBitmap(
@@ -63,7 +63,7 @@ object PytorchMobile {
             x = _x
         } catch (exc: Exception) {
             Log.d("PytorchMobile", "Null")
-            val emptyDetectResultList: List<NonMaxSuppression.DetectResult> = listOf()
+            val emptyDetectResultList: List<DetectResult> = listOf()
             return emptyDetectResultList
         }
 

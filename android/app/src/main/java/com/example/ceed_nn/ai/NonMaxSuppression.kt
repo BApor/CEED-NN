@@ -5,11 +5,7 @@ import org.pytorch.Tensor
 
 object NonMaxSuppression {
 
-    data class DetectResult(
-        var boundingBox: Rect,
-        var classId: Int,
-        var score: Float
-    )
+
 
     fun nms(
        x: Tensor,
@@ -55,7 +51,8 @@ object NonMaxSuppression {
                         (box[3] * imgToUiScale).toInt()
                     ),
                     score = scores[i],
-                    classId = classes[i].toInt())
+                    classId = classes[i].toInt(),
+                    seedArea = 0f)
                 result.add(detection)
             }
         }

@@ -9,31 +9,41 @@ import androidx.core.graphics.red
 
 object PropertiesProcessor {
 
-    fun calculateReferencePixels(detections: List<NonMaxSuppression.DetectResult>) : Int {
-        for (i in 0 until detections.size)
-            if (detections[i].classId == 0) {
-                return (detections[i].boundingBox.right - detections[i].boundingBox.left) * (detections[i].boundingBox.bottom - detections[i].boundingBox.top)
+    fun calculateReferencePixels(detections: List<DetectResult>) : Int {
+        var max = 0f
+        var maxReferenceDetection: DetectResult = DetectResult(Rect(0,0,0,0), 0, 0f, 0f)
+
+        for (detection: DetectResult in detections)
+            if (detection.score > max && detection.classId == 0){
+                max = detection.score
+                maxReferenceDetection = detection
             }
-        return 0
+
+        if (max == 0f)
+            return 0
+
+        return (maxReferenceDetection.boundingBox.right - maxReferenceDetection.boundingBox.left) * (maxReferenceDetection.boundingBox.bottom - maxReferenceDetection.boundingBox.top)
+
+
     }
 
-    fun calculateSeedPixels(detections: List<NonMaxSuppression.DetectResult>, imageProxy: ImageProxy, referenceScale: Float) : List<Float> {
-        val bitmap = imageProxy.toBitmap()
-        val results = mutableListOf<Float>()
+    fun calculateSeedPixels(detections: List<DetectResult>, imageProxy: ImageProxy, referenceScale: Float) : List<DetectResult>{
+        val detectionsWithSeedAreas = detections
+        val bitmap = PytorchMobile.rotateBitmap(imageProxy.toBitmap(), 90f)
 
-        for (detection: NonMaxSuppression.DetectResult in detections) {
-            val width = detection.boundingBox.width()
-            val height = detection.boundingBox.height()
+        for (i in 0 until detectionsWithSeedAreas.size) {
+            val left = detectionsWithSeedAreas[i].boundingBox.left
+            val top = detectionsWithSeedAreas[i].boundingBox.top
+            val width = detectionsWithSeedAreas[i].boundingBox.width()
+            val height = detectionsWithSeedAreas[i].boundingBox.height()
 
-            val outputBitmap = Bitmap.createBitmap(width, height, bitmap.config)
-            val canvas = android.graphics.Canvas(outputBitmap)
-            canvas.drawBitmap(bitmap, detection.boundingBox, Rect(0, 0, width, height), null)
+            val detectionCrop = Bitmap.createBitmap(bitmap, left, top, width, height)
 
             // Background color grey-white between RGB(150, 150, 150) and RGB(240, 240, 240)
             var nonBackgroundPixels = 0 // Seed pixels
-            for (y in 0 until height) {
-                for (x in 0 until width) {
-                    val pixel = outputBitmap.getPixel(x, y)
+            for (x in 0 until width) {
+                for (y in 0 until height) {
+                    val pixel = detectionCrop.getPixel(x, y)
                     if (!((pixel.red in 151..239) &&
                           (pixel.green in 151..239) &&
                           (pixel.blue in 151..239))) {
@@ -42,13 +52,9 @@ object PropertiesProcessor {
                 }
             }
 
-            var o = 0
-            if (detection.classId == 10 && detections.size == 2)
-                o = 2
-
-            results.add(nonBackgroundPixels * referenceScale)
+            detectionsWithSeedAreas[i].seedArea = nonBackgroundPixels * referenceScale
         }
 
-        return results
+        return detectionsWithSeedAreas
     }
 }

@@ -6,6 +6,7 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.Rect
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -26,6 +27,7 @@ import android.util.Size
 import android.view.Surface
 import android.widget.Button
 import androidx.camera.core.CameraControl
+import com.example.ceed_nn.ai.DetectResult
 import com.example.ceed_nn.ai.NonMaxSuppression
 import com.example.ceed_nn.ai.PropertiesProcessor
 import com.example.ceed_nn.ai.PytorchMobile
@@ -33,12 +35,17 @@ import com.example.ceed_nn.ai.PytorchMobile
 
 class CameraFragment : Fragment() {
     private lateinit var cameraControl: CameraControl
-    private var referenceScale = 0f
 
     private var _binding: FragmentCameraBinding? = null
     private val binding get() = _binding!!
     private lateinit var cameraExecutor: ExecutorService
     private var isFlashOn = false
+
+    private var referenceScale = 0f
+    private var referenceCounter = 0
+    private val referenceNumber = 10
+    private var newReferenceScale = 0f
+    private var detections: List<DetectResult> = listOf( DetectResult(Rect(0,0,0,0), 0, 0f, 0f))
 
 
     companion object {
@@ -105,7 +112,7 @@ class CameraFragment : Fragment() {
             }
 
             val imageAnalysis = ImageAnalysis.Builder()
-                .setTargetResolution(Size(2500, 2500))
+                .setTargetResolution(Size(1080, 1088))
                 .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
                 .build()
 
@@ -133,7 +140,7 @@ class CameraFragment : Fragment() {
     }
 
     private fun processFrame(imageProxy: ImageProxy) {
-        val bitmap = Bitmap.createBitmap(1080, 1080, Bitmap.Config.ARGB_8888)
+        val bitmap = Bitmap.createBitmap(1080, 1088, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
 
         val rectPaint = Paint().apply {
@@ -148,14 +155,19 @@ class CameraFragment : Fragment() {
             textAlign = Paint.Align.LEFT
         }
 
-        val detections = PytorchMobile.detect(imageProxy)
+        detections = PytorchMobile.detect(imageProxy)
 
-        for(detection: NonMaxSuppression.DetectResult in detections) {
-            canvas.drawRect(detection.boundingBox, rectPaint)
-            val text = detection.classId.toString()
-            val textX = detection.boundingBox.left.toFloat()
-            val textY = detection.boundingBox.top.toFloat() - 10
-            canvas.drawText(text, textX, textY, textPaint)
+        for(i in 0 until detections.size) {
+            canvas.drawRect(detections[i].boundingBox, rectPaint)
+            val classText = detections[i].classId.toString()
+            val classTextX = detections[i].boundingBox.left.toFloat()
+            val classTextY = detections[i].boundingBox.top.toFloat() - 1
+            canvas.drawText(classText, classTextX, classTextY, textPaint)
+
+            val indexText = i.toString()
+            val indexTextX = detections[i].boundingBox.right.toFloat()
+            val indexTextY = detections[i].boundingBox.top.toFloat() - 10
+            canvas.drawText(indexText, indexTextX, indexTextY, textPaint)
         }
 
         binding.imageView.post {
@@ -163,27 +175,43 @@ class CameraFragment : Fragment() {
         }
 
         if (detections.isNotEmpty())
-            calculatePropreties(detections, imageProxy)
+            calculatePropreties(imageProxy)
 
         imageProxy.close()
     }
 
-    fun calculatePropreties(detections: List<NonMaxSuppression.DetectResult>, imageProxy: ImageProxy) {
-        val newReferenceScale = 100f / PropertiesProcessor.calculateReferencePixels(detections)
+    fun calculatePropreties( imageProxy: ImageProxy) {
+        if (referenceCounter < referenceNumber){
+            val newPartialReferenceScale = 100f / PropertiesProcessor.calculateReferencePixels(detections)
+           if (newPartialReferenceScale != Float.POSITIVE_INFINITY
+               && newPartialReferenceScale  != 0f){
+               newReferenceScale += newPartialReferenceScale
+                referenceCounter++
+            }
+        } else {
+            newReferenceScale /= referenceNumber
+        }
 
-        if (referenceScale == 0f)
-            referenceScale = 100f / PropertiesProcessor.calculateReferencePixels(detections)
-        else if ((newReferenceScale != 0f)
-            && (((newReferenceScale / referenceScale * 100f) in 0f .. 5f)
-            || ((newReferenceScale / referenceScale * 100f) in 100f .. 105f)))
-            referenceScale = 100f / PropertiesProcessor.calculateReferencePixels(detections) // 10 milliméter, mert egy centimeter a referencianégyzet
+        if ((newReferenceScale != 0f && newReferenceScale != Float.POSITIVE_INFINITY) &&
+            (referenceCounter == referenceNumber)) {
+            referenceScale = newReferenceScale / 10
+            newReferenceScale = 0f
+        }
 
-        val seedAreas = PropertiesProcessor.calculateSeedPixels(detections, imageProxy, referenceScale)
+        if (referenceCounter == referenceNumber) {
+            detections =
+                PropertiesProcessor.calculateSeedPixels(detections, imageProxy, referenceScale)
 
 
-        for (i in 0 until detections.size) {
-            if (detections[i].classId != 0)
-                binding.textView.text = "${detections[i].classId}: ${seedAreas[i]}"
+            for (i in 0 until detections.size) {
+                if (detections[i].classId != 0)
+                    binding.textView.text = "${detections[i].classId}: ${detections[i].seedArea} mm^2"
+                else
+                    binding.textView2.text = "${detections[i].classId}: ${detections[i].seedArea} mm^2"
+            }
+
+            referenceCounter = 0
+            referenceScale = 0f
         }
     }
 
