@@ -1,16 +1,18 @@
 package com.example.ceed_nn.view
 
 import android.app.Application
+import android.content.Context
 import androidx.camera.core.ImageProxy
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.ViewModel
 import com.example.ceed_nn.data.repositories.DetectionDetailsRepository
 import com.example.ceed_nn.data.repositories.DetectionRepository
 import com.example.ceed_nn.data.stuctures.SeedDetectionDTO
 import com.example.ceed_nn.data.stuctures.SeedGroupDTO
 
-class AppViewModel(application: Application) : AndroidViewModel(application){
-    private var detectionRepository: DetectionRepository
-    private var detectionDetailsRepository: DetectionDetailsRepository
+class AppViewModel : ViewModel(){
+    private lateinit var detectionRepository: DetectionRepository
+    private lateinit var detectionDetailsRepository: DetectionDetailsRepository
 
     var detections: List<SeedDetectionDTO> = emptyList()
     var referenceScale: Float  = 0f
@@ -20,9 +22,9 @@ class AppViewModel(application: Application) : AndroidViewModel(application){
     var totalArea: Float = 0f
     var totalMass: Float = 0f
 
-    init {
-        detectionRepository = DetectionRepository(application.applicationContext)
-        detectionDetailsRepository = DetectionDetailsRepository(application.applicationContext)
+    fun initializeRepositories (context: Context){
+        detectionRepository = DetectionRepository(context)
+        detectionDetailsRepository = DetectionDetailsRepository(context)
     }
 
     // Detections

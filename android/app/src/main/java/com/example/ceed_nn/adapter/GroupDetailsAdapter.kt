@@ -24,12 +24,14 @@ class GroupDetailsAdapter(
         return GroupDetailsViewHolder(itemView)
     }
 
-    override fun getItemCount(): Int = seedGroupList.size
-
     override fun onBindViewHolder(holder: GroupDetailsViewHolder, position: Int) {
         val currentGroup = seedGroupList[position]
         holder.bind(currentGroup)
     }
+
+    override fun getItemCount(): Int = seedGroupList.size
+
+
     inner class GroupDetailsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         init {
             itemView.setOnClickListener {

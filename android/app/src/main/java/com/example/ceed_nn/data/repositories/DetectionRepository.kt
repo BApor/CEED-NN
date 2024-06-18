@@ -13,6 +13,7 @@ import androidx.core.graphics.red
 import com.example.ceed_nn.ai.DetectionEngine
 import com.example.ceed_nn.data.stuctures.SeedDetectionDTO
 import com.example.ceed_nn.util.ImageUtil
+import com.example.ceed_nn.util.NumUtil
 
 class DetectionRepository(private var context: Context) {
     private lateinit var detEngine: DetectionEngine
@@ -95,7 +96,7 @@ class DetectionRepository(private var context: Context) {
                 }
             }
 
-            detections[i].seedArea = nonBackgroundPixels * referenceScale
+            detections[i].seedArea = NumUtil.floatRoundTo(nonBackgroundPixels * referenceScale,2)
 
             val canvas = Canvas(detectionCrop)
             val paint = Paint().apply {

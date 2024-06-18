@@ -5,6 +5,7 @@ import com.example.ceed_nn.data.stuctures.SeedClassDTO
 import com.example.ceed_nn.data.stuctures.SeedDetectionDTO
 import com.example.ceed_nn.data.stuctures.SeedGroupDTO
 import com.example.ceed_nn.util.JsonUtil
+import com.example.ceed_nn.util.NumUtil
 
 class DetectionDetailsRepository(private val context: Context) {
     private var detections: List<SeedDetectionDTO> = emptyList()
@@ -27,19 +28,9 @@ class DetectionDetailsRepository(private val context: Context) {
     }
 
     fun setDetections(detec: List<SeedDetectionDTO>) {
-
-        // Removing reference detects
-
-        val indexes = mutableListOf<Int>()
-        for (i in 0 until detec.size)
-            indexes.add(i)
-        val mutableDetec = detec.toMutableList()
-        for (i in indexes)
-            mutableDetec.removeAt(i)
-
         totalArea = 0f
         totalMass = 0f
-        detections = mutableDetec
+        detections = detec.toMutableList().filter { it.classId != 0 }
     }
 
     fun fetchSeedClassesFromJSON() {
@@ -58,9 +49,9 @@ class DetectionDetailsRepository(private val context: Context) {
                 val seedArea = classDetections[j].seedArea
                 val seedMass = seedArea * classes[i].massScale
 
-                classDetections[j].seedMass = seedMass
-                classDetections[j].seedLength = seedArea * classes[i].lengthScale
-                classDetections[j].seedWidth = seedArea * classes[i].widthScale
+                classDetections[j].seedMass = NumUtil.floatRoundTo(seedMass, 2)
+                classDetections[j].seedLength = NumUtil.floatRoundTo(seedArea * classes[i].lengthScale, 2)
+                classDetections[j].seedWidth = NumUtil.floatRoundTo(seedArea * classes[i].widthScale, 2)
 
                 groupArea += seedArea
                 groupMass += seedMass
@@ -71,8 +62,8 @@ class DetectionDetailsRepository(private val context: Context) {
                 name = classes[i].name,
                 seeds = classDetections,
                 photo = classDetections[0].photo,
-                totalArea = groupArea,
-                totalMass = groupMass
+                totalArea = NumUtil.floatRoundTo(groupArea, 2),
+                totalMass = NumUtil.floatRoundTo(groupMass, 2)
             )
 
             result.add(newSeedGroup)

@@ -28,6 +28,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
 import androidx.camera.core.CameraControl
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import com.example.ceed_nn.R
 import com.example.ceed_nn.view.AppViewModel
@@ -54,7 +55,9 @@ class CameraFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+
         appViewModel = ViewModelProvider(requireActivity()).get(AppViewModel::class.java)
+        appViewModel.initializeRepositories(requireContext())
 
         _binding = FragmentCameraBinding.inflate(inflater, container, false)
         val root: View = binding.root
