@@ -31,7 +31,7 @@ import androidx.camera.core.CameraControl
 import androidx.lifecycle.ViewModelProvider
 import com.example.ceed_nn.R
 import com.example.ceed_nn.view.AppViewModel
-import com.example.ceed_nn.data.stuctures.DetectResult
+import com.example.ceed_nn.data.stuctures.SeedDetectionDTO
 
 class CameraFragment : Fragment() {
     private lateinit var cameraControl: CameraControl
@@ -101,15 +101,17 @@ class CameraFragment : Fragment() {
 
         val modelList = arrayOf<String?>("YOLOv8", "YOLOv5", "YOLOv3")
 
-        val mArrayAdapter = ArrayAdapter<Any?>(requireContext(), R.layout.spinner_item, modelList)
-        mArrayAdapter.setDropDownViewResource(R.layout.spinner_item)
+        val mArrayAdapter = ArrayAdapter<Any?>(requireContext(), R.layout.item_spinner, modelList)
+        mArrayAdapter.setDropDownViewResource(R.layout.item_spinner)
 
         spinner.adapter = mArrayAdapter
 
         spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
-                val selectedItem = parent.getItemAtPosition(position).toString()
-                appViewModel.setDetEngineModel(selectedItem)
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                if (view != null) {
+                    val selectedItem = parent.getItemAtPosition(position).toString()
+                    appViewModel.setDetEngineModel(selectedItem)
+                }
             }
 
             override fun onNothingSelected(parent: AdapterView<*>) {
@@ -175,22 +177,22 @@ class CameraFragment : Fragment() {
         appViewModel.setCurrentFrame(imageProxy)
         appViewModel.fetchDetections()
 
+        if (isAdded && view != null)
+            requireActivity().runOnUiThread {
+                if (isBBoxesEnabled)
+                    drawBoundingBoxes(imageProxy, appViewModel.detections)
+                else
+                    binding.imageView.setImageResource(0)
 
-        requireActivity().runOnUiThread {
-            if (isBBoxesEnabled)
-                drawBoundingBoxes(imageProxy, appViewModel.detections)
-            else
-                binding.imageView.setImageResource(0)
-
-            val modelTime = appViewModel.time
-            binding.msTextView.setText("${modelTime.toFloat()} ms")
-            // binding.fpsTextView.setText("${1000.0 / modelTime.toFloat()} fps")
-        }
+                val modelTime = appViewModel.time
+                binding.msTextView.setText("${modelTime.toFloat()} ms")
+                // binding.fpsTextView.setText("${1000.0 / modelTime.toFloat()} fps")
+            }
 
         imageProxy.close()
     }
 
-    private fun drawBoundingBoxes(imageProxy: ImageProxy, detections: List<DetectResult>) {
+    private fun drawBoundingBoxes(imageProxy: ImageProxy, detections: List<SeedDetectionDTO>) {
         val bitmap = Bitmap.createBitmap(1080, 1088, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
 
@@ -243,6 +245,8 @@ class CameraFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+        binding.flashSwitch.isChecked = false
+        isFlashOn = false
         if (allPermissionsGranted()) {
             startCamera()
         } else {

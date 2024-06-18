@@ -8,6 +8,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.ceed_nn.databinding.FragmentDetailsBinding
+import com.example.ceed_nn.view.AppViewModel
 
 class DetailsFragment : Fragment() {
 
@@ -20,15 +21,13 @@ class DetailsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         val detailsViewModel =
-            ViewModelProvider(this).get(DetailsViewModel::class.java)
+            ViewModelProvider(this).get(AppViewModel::class.java)
 
         _binding = FragmentDetailsBinding.inflate(inflater, container, false)
         val root: View = binding.root
 
-        val textView: TextView = binding.textDashboard
-        detailsViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
-        }
+
+
         return root
     }
 

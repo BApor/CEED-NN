@@ -3,19 +3,15 @@ package com.example.ceed_nn.view
 import android.app.Application
 import androidx.camera.core.ImageProxy
 import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
 import com.example.ceed_nn.data.repositories.DetectionDetailsRepository
 import com.example.ceed_nn.data.repositories.DetectionRepository
-import com.example.ceed_nn.data.stuctures.DetectResult
-import kotlinx.coroutines.launch
+import com.example.ceed_nn.data.stuctures.SeedDetectionDTO
 
 class AppViewModel(application: Application) : AndroidViewModel(application){
     private var detectionRepository: DetectionRepository
     private var detectionDetailsRepository: DetectionDetailsRepository
 
-    var detections: List<DetectResult> = emptyList()
+    var detections: List<SeedDetectionDTO> = emptyList()
     var referenceScale: Float  = 0f
     var time = 0.0
 

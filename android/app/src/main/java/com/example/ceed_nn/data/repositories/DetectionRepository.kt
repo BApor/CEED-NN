@@ -8,12 +8,12 @@ import androidx.core.graphics.blue
 import androidx.core.graphics.green
 import androidx.core.graphics.red
 import com.example.ceed_nn.ai.DetectionEngine
-import com.example.ceed_nn.data.stuctures.DetectResult
+import com.example.ceed_nn.data.stuctures.SeedDetectionDTO
 import com.example.ceed_nn.util.ImageUtil
 
 class DetectionRepository(private var context: Context) {
     private lateinit var detEngine: DetectionEngine
-    private lateinit var detections: List<DetectResult>
+    private lateinit var detections: List<SeedDetectionDTO>
     private lateinit var image: ImageProxy
 
     private var referenceScale = 0f
@@ -36,7 +36,7 @@ class DetectionRepository(private var context: Context) {
         time = detEngine.getTime()
     }
 
-    fun getDetections(): List<DetectResult>  {
+    fun getDetections(): List<SeedDetectionDTO>  {
         return detections
     }
 
@@ -50,9 +50,9 @@ class DetectionRepository(private var context: Context) {
 
     private fun calculateReferencePixels() : Int{
         var max = 0f
-        var maxReferenceDetection = DetectResult(Rect(0,0,0,0), 0, 0f, 0f, Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888))
+        var maxReferenceDetection = SeedDetectionDTO(Rect(0,0,0,0), 0, 0f, Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888), 0f, 0f, 0f)
 
-        for (detection: DetectResult in detections)
+        for (detection: SeedDetectionDTO in detections)
             if (detection.score > max && detection.classId == 0){
                 max = detection.score
                 maxReferenceDetection = detection

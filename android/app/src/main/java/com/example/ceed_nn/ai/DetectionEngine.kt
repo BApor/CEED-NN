@@ -4,7 +4,7 @@ import android.content.Context
 import android.graphics.Bitmap
 import android.util.Log
 import androidx.camera.core.ImageProxy
-import com.example.ceed_nn.data.stuctures.DetectResult
+import com.example.ceed_nn.data.stuctures.SeedDetectionDTO
 import com.example.ceed_nn.help.PrePostProcessor
 import com.example.ceed_nn.util.ImageUtil
 import org.pytorch.IValue
@@ -13,7 +13,6 @@ import org.pytorch.torchvision.TensorImageUtils
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
-import java.text.DecimalFormat
 import kotlin.math.pow
 import kotlin.math.roundToInt
 
@@ -51,7 +50,7 @@ class DetectionEngine(context: Context, modelName: String) {
     }
 
 
-    fun detect (imageProxy: ImageProxy) : List<DetectResult>{
+    fun detect (imageProxy: ImageProxy) : List<SeedDetectionDTO>{
         val bitmap: Bitmap = ImageUtil.rotateBitmap(imageProxy.toBitmap(), 90f)
 
         val resizedBitmap = Bitmap.createScaledBitmap(
@@ -76,7 +75,7 @@ class DetectionEngine(context: Context, modelName: String) {
             x = _x
         } catch (exc: Exception) {
             Log.d("PytorchMobile", "Null")
-            val emptyDetectResultList: List<DetectResult> = listOf()
+            val emptyDetectResultList: List<SeedDetectionDTO> = listOf()
             return emptyDetectResultList
         }
 

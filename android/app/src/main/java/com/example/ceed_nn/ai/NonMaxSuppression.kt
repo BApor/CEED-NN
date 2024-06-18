@@ -2,7 +2,7 @@ package com.example.ceed_nn.ai
 
 import android.graphics.Bitmap
 import android.graphics.Rect
-import com.example.ceed_nn.data.stuctures.DetectResult
+import com.example.ceed_nn.data.stuctures.SeedDetectionDTO
 import org.pytorch.Tensor
 
 object NonMaxSuppression {
@@ -13,7 +13,7 @@ object NonMaxSuppression {
        x: Tensor,
        threshold: Float,
        imgToUiScale: Float
-    ): List<DetectResult> {
+    ): List<SeedDetectionDTO> {
         // x: [0:4] - box, [4] - score, [5] - class
         val data = x.dataAsFloatArray
         val numElem = x.shape()[0].toInt()
@@ -41,11 +41,11 @@ object NonMaxSuppression {
             }
         }
 
-        val result = mutableListOf<DetectResult>()
+        val result = mutableListOf<SeedDetectionDTO>()
         for (i in 0 until numElem) {
             if (selected_indices.contains(i)) {
                 val box = boxes.slice((i*4) until (i*4)+4)
-                val detection = DetectResult(
+                val detection = SeedDetectionDTO(
                     boundingBox = Rect(
                         (box[0] * imgToUiScale).toInt(),
                         (box[1] * imgToUiScale).toInt(),
@@ -55,7 +55,10 @@ object NonMaxSuppression {
                     score = scores[i],
                     classId = classes[i].toInt(),
                     seedArea = 0f,
-                    photo = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888))
+                    photo = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888),
+                    seedDiameter = 0f,
+                    seedMass = 0f
+                    )
                 result.add(detection)
             }
         }
