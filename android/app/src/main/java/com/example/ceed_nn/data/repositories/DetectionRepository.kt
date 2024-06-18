@@ -2,6 +2,9 @@ package com.example.ceed_nn.data.repositories
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
 import android.graphics.Rect
 import androidx.camera.core.ImageProxy
 import androidx.core.graphics.blue
@@ -50,7 +53,7 @@ class DetectionRepository(private var context: Context) {
 
     private fun calculateReferencePixels() : Int{
         var max = 0f
-        var maxReferenceDetection = SeedDetectionDTO(Rect(0,0,0,0), 0, 0f, Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888), 0f, 0f, 0f)
+        var maxReferenceDetection = SeedDetectionDTO(Rect(0,0,0,0), 0, 0f, Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888), 0f, 0f, 0f, 0f)
 
         for (detection: SeedDetectionDTO in detections)
             if (detection.score > max && detection.classId == 0){
@@ -93,6 +96,15 @@ class DetectionRepository(private var context: Context) {
             }
 
             detections[i].seedArea = nonBackgroundPixels * referenceScale
+
+            val canvas = Canvas(detectionCrop)
+            val paint = Paint().apply {
+                color = Color.RED
+                textSize = 40f
+                isAntiAlias = true
+            }
+            canvas.drawText(i.toString(), 10f, 50f, paint)
+
             detections[i].photo = detectionCrop
         }
     }

@@ -6,6 +6,7 @@ import androidx.lifecycle.AndroidViewModel
 import com.example.ceed_nn.data.repositories.DetectionDetailsRepository
 import com.example.ceed_nn.data.repositories.DetectionRepository
 import com.example.ceed_nn.data.stuctures.SeedDetectionDTO
+import com.example.ceed_nn.data.stuctures.SeedGroupDTO
 
 class AppViewModel(application: Application) : AndroidViewModel(application){
     private var detectionRepository: DetectionRepository
@@ -14,6 +15,10 @@ class AppViewModel(application: Application) : AndroidViewModel(application){
     var detections: List<SeedDetectionDTO> = emptyList()
     var referenceScale: Float  = 0f
     var time = 0.0
+
+    var seedGroups: List<SeedGroupDTO> = emptyList()
+    var totalArea: Float = 0f
+    var totalMass: Float = 0f
 
     init {
         detectionRepository = DetectionRepository(application.applicationContext)
@@ -43,5 +48,18 @@ class AppViewModel(application: Application) : AndroidViewModel(application){
 
     // Detection details
 
+    fun fetchSeedClassesFromAssets() {
+        detectionDetailsRepository.fetchSeedClassesFromJSON()
+    }
 
+    fun fetchDetectionDetails() {
+        detectionDetailsRepository.setDetections(detections)
+        detectionDetailsRepository.calculatePhysicalPropertiesToGroups()
+        seedGroups = detectionDetailsRepository.getSeedGroups()
+    }
+
+    fun fetchTotalProperties() {
+        totalArea = detectionDetailsRepository.getTotalArea()
+        totalMass = detectionDetailsRepository.getTotalMass()
+    }
 }

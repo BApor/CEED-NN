@@ -24,31 +24,6 @@ object PrePostProcessor {
     private const val mThreshold = 300f // score above which a detection is generated
     private const val mNmsLimit = 60
 
-    private var mClasses: Array<String> = arrayOf(
-        "Reference_0",
-        "Red_Clover_1",
-        "Common_Pea_2",
-        "Austrian_Winter_Pea_3",
-        "Marrowfat_Pea_4",
-        "Sugar_Beet_5",
-        "Chickpea_6",
-        "Buckwheat_7",
-        "Orange_Corn_8",
-        "Sweet_Corn_9",
-        "Faba_Bean_10",
-        "Soybean_11",
-        "Common_Wheat_12",
-        "Hairy_Vetch_13",
-        "Sunflower_14",
-        "Oat_15",
-        "Carrot_16",
-        "Mustard_17",
-        "Oil_Radish_18",
-        "Rye_19",
-        "Malted_Barley_20",
-        "Sorghum_21"
-    )
-
     fun IOU(a: Rect, b: Rect): Float {
         val areaA = ((a.right - a.left) * (a.bottom - a.top)).toFloat()
         if (areaA <= 0.0) return 0.0f

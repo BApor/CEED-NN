@@ -1,7 +1,7 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="150dp"
+    android:layout_height="100dp"
     android:padding="20dp"
     android:layout_marginBottom="20dp"
     android:background="@drawable/rounded_background">
@@ -15,39 +15,41 @@
         android:layout_toStartOf="@+id/seedGroupImage">
 
         <TextView
-            android:id="@+id/seedGroupName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:textColor="@android:color/black"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:text="NAME "/>
-
-        <TextView
-            android:id="@+id/seedGroupArea"
+            android:id="@+id/seedDetectionArea"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:textColor="@android:color/black"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:text="Group Area: "/>
+            android:text="Area"/>
 
         <TextView
-            android:id="@+id/seedGroupMass"
+            android:id="@+id/seedDetectionSize"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:textColor="@android:color/black"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:text="Group Mass: "/>
+            android:text="Size"/>
+
     </LinearLayout>
 
+    <TextView
+        android:id="@+id/seedDetectionMass"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="8dp"
+        android:textColor="@android:color/black"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:text="Mass"/>
+
     <ImageView
-        android:id="@+id/seedGroupImage"
-        android:layout_width="130dp"
+        android:id="@+id/seedDetectionImage"
+        android:layout_width="70dp"
         android:layout_height="match_parent"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"

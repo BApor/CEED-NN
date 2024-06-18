@@ -16,4 +16,21 @@
         android:name="com.example.ceed_nn.ui.details.DetailsFragment"
         android:label="@string/title_details"
         tools:layout="@layout/fragment_details" />
+
+    <fragment
+        android:id="@+id/navigation_seeddetails"
+        android:name="com.example.ceed_nn.ui.details.SeedDetailsFragment"
+        android:label="@string/title_seed_details"
+        tools:layout="@layout/fragment_seeddetails" />
+
+    <action
+        android:id="@+id/to_seedDetailsFragment"
+        app:destination="@id/navigation_seeddetails">
+    </action>
+
+    <action
+        android:id="@+id/to_navigationDetailsFragment"
+        app:destination="@id/navigation_details">
+    </action>
+
 </navigation>

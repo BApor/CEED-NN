@@ -42,14 +42,15 @@ class GroupDetailsAdapter(
         }
 
         fun bind(seedGroup: SeedGroupDTO) {
-            val seedTypeThumbnail = itemView.findViewById<ImageView>(R.id.seedTypeImage)
-            val seedTypeName = itemView.findViewById<TextView>(R.id.seedTypeName)
-            val seedTypeArea = itemView.findViewById<TextView>(R.id.seedTypeArea)
-            val seedTypeMass = itemView.findViewById<TextView>(R.id.seedTypeMass)
-            seedTypeThumbnail.setImageBitmap(seedGroup.photo)
-            seedTypeName.text = seedGroup.name
-            seedTypeArea.text = "Group Area: ${seedGroup.totalArea}"
-            seedTypeMass.text = "Group Mass: ${seedGroup.totalMass}"
+            val seedGroupThumbnail = itemView.findViewById<ImageView>(R.id.seedGroupImage)
+            val seedGroupName = itemView.findViewById<TextView>(R.id.seedGroupName)
+            val seedGroupArea = itemView.findViewById<TextView>(R.id.seedGroupArea)
+            val seedGroupMass = itemView.findViewById<TextView>(R.id.seedGroupMass)
+
+            seedGroupThumbnail.setImageBitmap(seedGroup.photo)
+            seedGroupName.text = seedGroup.name
+            seedGroupArea.text = "Group Area: ${seedGroup.totalArea}"
+            seedGroupMass.text = "Group Mass: ${seedGroup.totalMass}"
         }
     }
 }

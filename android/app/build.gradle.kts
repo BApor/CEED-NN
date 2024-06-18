@@ -57,6 +57,7 @@ dependencies {
     implementation ("com.microsoft.onnxruntime:onnxruntime-extensions-android:latest.release")
     implementation("org.pytorch:pytorch_android:1.13.1")
     implementation("org.pytorch:pytorch_android_torchvision:1.13.1")
+    implementation("com.google.code.gson:gson:2.8.9")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

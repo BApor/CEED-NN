@@ -1,0 +1,156 @@
+[
+  {
+    "index": 0,
+    "name": "Reference",
+    "lengthScale": 0,
+    "widthScale": 0,
+    "massScale": 0
+  },
+  {
+    "index": 1,
+    "name": "Red Clover",
+    "lengthScale": 1,
+    "widthScale": 1,
+    "massScale": 1
+  },
+  {
+    "index": 2,
+    "name": "Common Pea",
+    "lengthScale": 1,
+    "widthScale": 1,
+    "massScale": 1
+  },
+  {
+    "index": 3,
+    "name": "Austrian Winter Pea",
+    "lengthScale": 1,
+    "widthScale": 1,
+    "massScale": 1
+  },
+  {
+    "index": 4,
+    "name": "Marrowfat Pea",
+    "lengthScale": 1,
+    "widthScale": 1,
+    "massScale": 1
+  },
+  {
+    "index": 5,
+    "name": "Sugar Beet",
+    "lengthScale": 1,
+    "widthScale": 1,
+    "massScale": 1
+  },
+  {
+    "index": 6,
+    "name": "Chickpea",
+    "lengthScale": 1,
+    "widthScale": 1,
+    "massScale": 1
+  },
+  {
+    "index": 7,
+    "name": "Buckwheat",
+    "lengthScale": 1,
+    "widthScale": 1,
+    "massScale": 1
+  },
+  {
+    "index": 8,
+    "name": "Orange Corn",
+    "lengthScale": 1,
+    "widthScale": 1,
+    "massScale": 1
+  },
+  {
+    "index": 9,
+    "name": "Sweet Corn",
+    "lengthScale": 1,
+    "widthScale": 1,
+    "massScale": 1
+  },
+  {
+    "index": 10,
+    "name": "Faba Bean",
+    "lengthScale": 1,
+    "widthScale": 1,
+    "massScale": 1
+  },
+  {
+    "index": 11,
+    "name": "Soybean",
+    "lengthScale": 1,
+    "widthScale": 1,
+    "massScale": 1
+  },
+  {
+    "index": 12,
+    "name": "Common Wheat",
+    "lengthScale": 1,
+    "widthScale": 1,
+    "massScale": 1
+  },
+  {
+    "index": 13,
+    "name": "Hairy Vetch",
+    "lengthScale": 1,
+    "widthScale": 1,
+    "massScale": 1
+  },
+  {
+    "index": 14,
+    "name": "Sunflower",
+    "lengthScale": 1,
+    "widthScale": 1,
+    "massScale": 1
+  },
+  {
+    "index": 15,
+    "name": "Oat",
+    "lengthScale": 1,
+    "widthScale": 1,
+    "massScale": 1
+  },
+  {
+    "index": 16,
+    "name": "Carrot",
+    "lengthScale": 1,
+    "widthScale": 1,
+    "massScale": 1
+  },
+  {
+    "index": 17,
+    "name": "Mustard",
+    "lengthScale": 1,
+    "widthScale": 1,
+    "massScale": 1
+  },
+  {
+    "index": 18,
+    "name": "Oil Radish",
+    "lengthScale": 1,
+    "widthScale": 1,
+    "massScale": 1
+  },
+  {
+    "index": 19,
+    "name": "Rye",
+    "lengthScale": 1,
+    "widthScale": 1,
+    "massScale": 1
+  },
+  {
+    "index": 20,
+    "name": "Malted Barley",
+    "lengthScale": 1,
+    "widthScale": 1,
+    "massScale": 1
+  },
+  {
+    "index": 21,
+    "name": "Sorghum",
+    "lengthScale": 1,
+    "widthScale": 1,
+    "massScale": 1
+  }
+]

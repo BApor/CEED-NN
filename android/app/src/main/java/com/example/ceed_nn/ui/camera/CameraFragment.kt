@@ -54,10 +54,11 @@ class CameraFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+        appViewModel = ViewModelProvider(requireActivity()).get(AppViewModel::class.java)
 
         _binding = FragmentCameraBinding.inflate(inflater, container, false)
         val root: View = binding.root
-        appViewModel = ViewModelProvider(requireActivity()).get(AppViewModel::class.java)
+
 
         val flashToggleSwitch: Button = binding.flashSwitch
         flashToggleSwitch.setOnClickListener {
@@ -128,7 +129,7 @@ class CameraFragment : Fragment() {
     }
 
     private fun startCamera() {
-        var cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext())
+        val cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext())
 
         cameraProviderFuture.addListener({
             val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
@@ -162,7 +163,7 @@ class CameraFragment : Fragment() {
     }
 
     private fun stopCamera() {
-        var cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext())
+        val cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext())
 
         cameraProviderFuture.addListener({
             val cameraProvider: ProcessCameraProvider = cameraProviderFuture.get()
@@ -171,9 +172,6 @@ class CameraFragment : Fragment() {
     }
 
     fun processFrame(imageProxy: ImageProxy) {
-
-        // Detections
-
         appViewModel.setCurrentFrame(imageProxy)
         appViewModel.fetchDetections()
 
@@ -185,7 +183,7 @@ class CameraFragment : Fragment() {
                     binding.imageView.setImageResource(0)
 
                 val modelTime = appViewModel.time
-                binding.msTextView.setText("${modelTime.toFloat()} ms")
+                binding.msTextView.text = "${modelTime.toFloat()} ms"
                 // binding.fpsTextView.setText("${1000.0 / modelTime.toFloat()} fps")
             }
 

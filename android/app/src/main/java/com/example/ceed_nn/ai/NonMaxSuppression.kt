@@ -7,8 +7,6 @@ import org.pytorch.Tensor
 
 object NonMaxSuppression {
 
-
-
     fun nms(
        x: Tensor,
        threshold: Float,
@@ -56,7 +54,8 @@ object NonMaxSuppression {
                     classId = classes[i].toInt(),
                     seedArea = 0f,
                     photo = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888),
-                    seedDiameter = 0f,
+                    seedLength = 0f,
+                    seedWidth = 0f,
                     seedMass = 0f
                     )
                 result.add(detection)
