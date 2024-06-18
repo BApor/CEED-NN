@@ -22,16 +22,12 @@ import java.nio.file.attribute.GroupPrincipal
 
 class DetailsFragment : Fragment() {
 
-    private var _binding: FragmentDetailsBinding? = null
-    private val binding get() = _binding!!
-
     private lateinit var appViewModel: AppViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentDetailsBinding.inflate(inflater, container, false)
         appViewModel = ViewModelProvider(requireActivity()).get(AppViewModel::class.java)
         appViewModel.fetchSeedClassesFromAssets()
 
@@ -51,7 +47,7 @@ class DetailsFragment : Fragment() {
         appViewModel.fetchDetectionDetails()
         appViewModel.fetchTotalProperties()
 
-        binding.textView.text = "${NumUtil.floatRoundTo(appViewModel.totalArea, 2)} mm^2"
+        view.findViewById<TextView>(R.id.textView).text= "${NumUtil.floatRoundTo(appViewModel.totalArea, 2)} mm^2"
         adapter.submitSeedGroupList(appViewModel.seedGroups)
     }
 
@@ -64,6 +60,5 @@ class DetailsFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null
     }
 }
