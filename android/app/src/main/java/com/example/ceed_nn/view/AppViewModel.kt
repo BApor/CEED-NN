@@ -3,14 +3,17 @@ package com.example.ceed_nn.view
 import android.content.Context
 import androidx.camera.core.ImageProxy
 import androidx.lifecycle.ViewModel
-import com.example.ceed_nn.data.repositories.DetectionDetailsRepository
-import com.example.ceed_nn.data.repositories.DetectionRepository
+import com.example.ceed_nn.data.repositories.GroupDetailsRepository
+import com.example.ceed_nn.data.repositories.CameraDetailsRepository
+import com.example.ceed_nn.data.repositories.SeedSizeDetailsRepository
+import com.example.ceed_nn.data.repositories.SeedSizeResults
 import com.example.ceed_nn.data.stuctures.SeedDetectionDTO
 import com.example.ceed_nn.data.stuctures.SeedGroupDTO
 
 class AppViewModel : ViewModel(){
-    private lateinit var detectionRepository: DetectionRepository
-    private lateinit var detectionDetailsRepository: DetectionDetailsRepository
+    private lateinit var cameraDetailsRepository: CameraDetailsRepository
+    private lateinit var groupDetailsRepository: GroupDetailsRepository
+    private lateinit var seedSizeDetailsRepository: SeedSizeDetailsRepository
 
     var detections: List<SeedDetectionDTO> = emptyList()
     var time = 0.0
@@ -21,48 +24,64 @@ class AppViewModel : ViewModel(){
     var seedGroups: List<SeedGroupDTO> = emptyList()
     var totalArea: Float = 0f
     var totalMass: Float = 0f
+    var totalNumber: Int = 0
+
+    lateinit var seedSizeResults: SeedSizeResults
 
     fun initializeRepositories (context: Context){
-        detectionRepository = DetectionRepository(context)
-        detectionDetailsRepository = DetectionDetailsRepository(context)
+        cameraDetailsRepository = CameraDetailsRepository(context)
+        groupDetailsRepository = GroupDetailsRepository(context)
+        seedSizeDetailsRepository = SeedSizeDetailsRepository()
     }
 
-    // Detections
+    // Camera Fragment Functions (Detections, BBoxes, Time etc.)
 
     fun setDetEngineModel(model: String) {
-        detectionRepository.setDetEngineModel(model)
+        cameraDetailsRepository.setDetEngineModel(model)
     }
 
     fun setCurrentFrame(imageProxy: ImageProxy) {
-        detectionRepository.setCurrentFrame(imageProxy)
+        cameraDetailsRepository.setCurrentFrame(imageProxy)
     }
 
     fun fetchDetections() {
-        detectionRepository.fetchDetections()
-        detectionRepository.calculatePhysicalRatios()
-        areaRatio = detectionRepository.getAreaRatio()
-        lengthRatio = detectionRepository.getLengthRatio()
+        cameraDetailsRepository.fetchDetections()
+        cameraDetailsRepository.calculatePhysicalRatios()
+        areaRatio = cameraDetailsRepository.getAreaRatio()
+        lengthRatio = cameraDetailsRepository.getLengthRatio()
+        time = cameraDetailsRepository.getTime()
         if (areaRatio == 0f)
             return
-        detectionRepository.calculateSeedAreas()
-        detections = detectionRepository.getDetections()
-        time = detectionRepository.getTime()
+        cameraDetailsRepository.calculateSeedAreas()
+        detections = cameraDetailsRepository.getDetections()
     }
 
-    // Detection details
+    // Details Fragment Functions (grouping by class, physical properties etc.)
 
     fun fetchSeedClassesFromAssets() {
-        detectionDetailsRepository.fetchSeedClassesFromJSON()
+        groupDetailsRepository.fetchSeedClassesFromJSON()
     }
 
     fun fetchDetectionDetails() {
-        detectionDetailsRepository.setDetections(detections)
-        detectionDetailsRepository.calculatePhysicalPropertiesToGroups()
-        seedGroups = detectionDetailsRepository.getSeedGroups()
+        groupDetailsRepository.setDetections(detections)
+        groupDetailsRepository.calculatePhysicalPropertiesToGroups()
+        groupDetailsRepository.fetchPercentageRatios()
+        seedGroups = groupDetailsRepository.getSeedGroups()
     }
 
     fun fetchTotalProperties() {
-        totalArea = detectionDetailsRepository.getTotalArea()
-        totalMass = detectionDetailsRepository.getTotalMass()
+        totalArea = groupDetailsRepository.getTotalArea()
+        totalMass = groupDetailsRepository.getTotalMass()
+        totalNumber = groupDetailsRepository.getTotalSeedNumber()
+    }
+
+    // Seed Size Details Fragment (size on 4 diagonals)
+
+    fun fetchSeedSizeDetails(seedDetectionId: Int, seedDetectionClassId: Int) {
+        seedSizeDetailsRepository.setLr(lengthRatio)
+        val seedDetection = seedGroups.find { it.id == seedDetectionClassId }!!.seeds.find {it.id == seedDetectionId}!!
+        seedSizeDetailsRepository.setSeedDetection(seedDetection)
+        seedSizeDetailsRepository.calculateSeedSizeAlongDiagonals()
+        seedSizeResults = seedSizeDetailsRepository.getResults()
     }
 }

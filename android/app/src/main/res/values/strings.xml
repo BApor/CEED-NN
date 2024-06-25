@@ -3,4 +3,5 @@
     <string name="title_camera">Camera</string>
     <string name="title_details">Details</string>
     <string name="title_seed_details">Seed Details</string>
+    <string name="title_seed_size_details">Seed Size Details</string>
 </resources>

@@ -4,6 +4,7 @@ import android.graphics.Bitmap
 import android.graphics.Rect
 
 data class SeedDetectionDTO(
+    var id: Int,
     var boundingBox: Rect,
     var classId: Int,
     var score: Float,

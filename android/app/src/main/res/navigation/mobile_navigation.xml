@@ -3,10 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_home">
+    app:startDestination="@+id/navigation_camera">
 
     <fragment
-        android:id="@+id/navigation_home"
+        android:id="@+id/navigation_camera"
         android:name="com.example.ceed_nn.ui.camera.CameraFragment"
         android:label="@string/title_camera"
         tools:layout="@layout/fragment_camera" />
@@ -18,19 +18,30 @@
         tools:layout="@layout/fragment_details" />
 
     <fragment
-        android:id="@+id/navigation_seeddetails"
+        android:id="@+id/navigation_seed_details"
         android:name="com.example.ceed_nn.ui.details.SeedDetailsFragment"
         android:label="@string/title_seed_details"
-        tools:layout="@layout/fragment_seeddetails" />
+        tools:layout="@layout/fragment_seed_details" />
+
+    <fragment
+        android:id="@+id/navigation_seed_size_details"
+        android:name="com.example.ceed_nn.ui.details.SeedSizeDetailsFragment"
+        android:label="@string/title_seed_size_details"
+        tools:layout="@layout/fragment_seed_size_details" />
 
     <action
         android:id="@+id/to_seedDetailsFragment"
-        app:destination="@id/navigation_seeddetails">
+        app:destination="@id/navigation_seed_details">
     </action>
 
     <action
         android:id="@+id/to_navigationDetailsFragment"
         app:destination="@id/navigation_details">
+    </action>
+
+    <action
+        android:id="@+id/to_seedSizeDetailsFragment"
+        app:destination="@id/navigation_seed_size_details">
     </action>
 
 </navigation>

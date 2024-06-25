@@ -208,17 +208,22 @@ class CameraFragment : Fragment() {
             textAlign = Paint.Align.LEFT
         }
 
-        for(i in 0 until detections.size) {
-            canvas.drawRect(detections[i].boundingBox, rectPaint)
-            val classText = detections[i].classId.toString()
-            val classTextX = detections[i].boundingBox.left.toFloat()
-            val classTextY = detections[i].boundingBox.top.toFloat() - 10
-            canvas.drawText(classText, classTextX, classTextY, textPaint)
-
-            val indexTextX = detections[i].boundingBox.right.toFloat()
-            val indexTextY = detections[i].boundingBox.top.toFloat()
-            canvas.drawText(i.toString(), indexTextX, indexTextY, textPaint)
+        val referenceWarningPaint = Paint().apply {
+            color = Color.RED
+            textSize = 80f
+            textAlign = Paint.Align.LEFT
         }
+
+        if (detections.isEmpty()){
+            canvas.drawText("Reference not calculated yet!", 30f, 100f, referenceWarningPaint)
+        } else
+            for(detection in detections) {
+                canvas.drawRect(detection.boundingBox, rectPaint)
+                val classText = detection.classId.toString()
+                val classTextX = detection.boundingBox.left.toFloat()
+                val classTextY = detection.boundingBox.top.toFloat() - 10
+                canvas.drawText(classText, classTextX, classTextY, textPaint)
+            }
 
         binding.imageView.post {
             binding.imageView.setImageBitmap(bitmap)

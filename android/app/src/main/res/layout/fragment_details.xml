@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.details.DetailsFragment">
+    tools:context=".ui.details.DetailsFragment"
+    android:background="@color/black">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewSeedGroups"
@@ -20,29 +21,46 @@
         tools:listitem="@layout/item_group" />
 
     <TextView
+        android:id="@+id/totalSeedNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="Total Seed Number"
+        android:textColor="@color/white"
+        android:textSize="22sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/recyclerViewSeedGroups"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
         android:id="@+id/totalArea"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:text="TextView"
+        android:layout_marginTop="75dp"
+        android:text="Total Area"
         android:textColor="@color/white"
         android:textSize="22sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/recyclerViewSeedGroups" />
+        app:layout_constraintTop_toBottomOf="@+id/recyclerViewSeedGroups"
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/totalMass"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="132dp"
-        android:text="TextView"
+        android:layout_marginTop="135dp"
+        android:text="Total Mass"
         android:textColor="@color/white"
         android:textSize="22sp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/recyclerViewSeedGroups" />
+        app:layout_constraintTop_toBottomOf="@+id/recyclerViewSeedGroups"
+        app:layout_constraintVertical_bias="0.0" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

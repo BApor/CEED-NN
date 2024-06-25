@@ -5,12 +5,12 @@ import android.graphics.Rect
 import com.example.ceed_nn.data.stuctures.SeedDetectionDTO
 import org.pytorch.Tensor
 
-object NonMaxSuppression {
+object PostProcess {
 
     fun nms(
-       x: Tensor,
-       threshold: Float,
-       imgToUiScale: Float
+        x: Tensor,
+        threshold: Float,
+        imgToUiRatio: Float
     ): List<SeedDetectionDTO> {
         // x: [0:4] - box, [4] - score, [5] - class
         val data = x.dataAsFloatArray
@@ -44,11 +44,12 @@ object NonMaxSuppression {
             if (selected_indices.contains(i)) {
                 val box = boxes.slice((i*4) until (i*4)+4)
                 val detection = SeedDetectionDTO(
+                    id = i,
                     boundingBox = Rect(
-                        (box[0] * imgToUiScale).toInt(),
-                        (box[1] * imgToUiScale).toInt(),
-                        (box[2] * imgToUiScale).toInt(),
-                        (box[3] * imgToUiScale).toInt()
+                        (box[0] * imgToUiRatio).toInt(),
+                        (box[1] * imgToUiRatio).toInt(),
+                        (box[2] * imgToUiRatio).toInt(),
+                        (box[3] * imgToUiRatio).toInt()
                     ),
                     score = scores[i],
                     classId = classes[i].toInt(),

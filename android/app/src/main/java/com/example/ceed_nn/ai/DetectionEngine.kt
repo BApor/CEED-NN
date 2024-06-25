@@ -2,7 +2,6 @@ package com.example.ceed_nn.ai
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.util.Log
 import androidx.camera.core.ImageProxy
 import com.example.ceed_nn.data.stuctures.SeedDetectionDTO
 import com.example.ceed_nn.help.PrePostProcessor
@@ -76,7 +75,7 @@ class DetectionEngine(context: Context, modelName: String) {
             val (_x, _, _) = model.forward(IValue.from(inputTensor)).toTuple()
             x = _x
         } catch (exc: Exception) {
-            Log.d("PytorchMobile", "Null")
+//            Log.d("PytorchMobile", "Null")
             val emptyDetectResultList: List<SeedDetectionDTO> = listOf()
             return emptyDetectResultList
         }
@@ -84,12 +83,12 @@ class DetectionEngine(context: Context, modelName: String) {
         val endTime = System.nanoTime()
         modelTime = ((endTime - startTime) / 1_000_000.0).roundTo(2)
 
-        val imgToUiScale = 1080f / 640f
+        val imgToUiRatio = 1080f / 640f
 
-        return NonMaxSuppression.nms(
+        return PostProcess.nms(
             x.toTensor(),
             0.45f,
-            imgToUiScale
+            imgToUiRatio
         )
     }
 

@@ -44,15 +44,21 @@ class GroupDetailsAdapter(
         }
 
         fun bind(seedGroup: SeedGroupDTO) {
-            val seedGroupThumbnail = itemView.findViewById<ImageView>(R.id.seedGroupImage)
             val seedGroupName = itemView.findViewById<TextView>(R.id.seedGroupName)
+            val seedGroupNumber = itemView.findViewById<TextView>(R.id.seedGroupNumber)
+            val seedGroupNumberPercent = itemView.findViewById<TextView>(R.id.seedGroupNumberPercent)
             val seedGroupArea = itemView.findViewById<TextView>(R.id.seedGroupArea)
+            val seedGroupAreaPercent = itemView.findViewById<TextView>(R.id.seedGroupAreaPercent)
             val seedGroupMass = itemView.findViewById<TextView>(R.id.seedGroupMass)
+            val seedGroupMassPercent = itemView.findViewById<TextView>(R.id.seedGroupMassPercent)
 
-            seedGroupThumbnail.setImageBitmap(seedGroup.photo)
             seedGroupName.text = seedGroup.name
-            seedGroupArea.text = "Group Area: ${seedGroup.totalArea}"
-            seedGroupMass.text = "Group Mass: ${seedGroup.totalMass}"
+            seedGroupNumber.text = "Number of Seeds: ${seedGroup.seeds.size}"
+            seedGroupNumberPercent.text = "Seed Number Ratio: ${seedGroup.percentageSeedNumber} %"
+            seedGroupArea.text = "Group Area: ${seedGroup.groupArea} mm^2"
+            seedGroupAreaPercent.text = "Group Area Ratio: ${seedGroup.percentageArea} %"
+            seedGroupMass.text = "Group Mass: ${seedGroup.groupMass} g"
+            seedGroupMassPercent.text = "Group Mass Ratio: ${seedGroup.percentageMass} %"
         }
     }
 }

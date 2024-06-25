@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,10 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.ceed_nn.R
 import com.example.ceed_nn.adapter.GroupDetailsAdapter
 import com.example.ceed_nn.data.stuctures.SeedGroupDTO
-import com.example.ceed_nn.databinding.FragmentDetailsBinding
-import com.example.ceed_nn.util.NumUtil
 import com.example.ceed_nn.view.AppViewModel
-import java.nio.file.attribute.GroupPrincipal
 
 class DetailsFragment : Fragment() {
 
@@ -47,8 +43,9 @@ class DetailsFragment : Fragment() {
         appViewModel.fetchDetectionDetails()
         appViewModel.fetchTotalProperties()
 
-        view.findViewById<TextView>(R.id.totalArea).text= "${NumUtil.floatRoundTo(appViewModel.totalArea, 2)} mm^2"
-        view.findViewById<TextView>(R.id.totalMass).text= "${NumUtil.floatRoundTo(appViewModel.totalMass, 2)} g"
+        view.findViewById<TextView>(R.id.totalSeedNumber).text = "Total number of seeds: ${appViewModel.totalNumber}"
+        view.findViewById<TextView>(R.id.totalArea).text = "Total area: ${appViewModel.totalArea} mm^2"
+        view.findViewById<TextView>(R.id.totalMass).text = "Total mass: ${appViewModel.totalMass} g"
 
         adapter.submitSeedGroupList(appViewModel.seedGroups)
     }
@@ -56,7 +53,7 @@ class DetailsFragment : Fragment() {
     private fun navigateToSeedDetails(seedGroup: SeedGroupDTO) {
         findNavController().navigate(
             R.id.to_seedDetailsFragment,
-            bundleOf("seedGroupIndex" to seedGroup.index)
+            bundleOf("seedGroupId" to seedGroup.id)
         )
     }
 

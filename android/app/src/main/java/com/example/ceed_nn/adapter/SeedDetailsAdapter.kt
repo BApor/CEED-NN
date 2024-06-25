@@ -8,12 +8,15 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.ceed_nn.R
 import com.example.ceed_nn.data.stuctures.SeedDetectionDTO
-class SeedDetailsAdapter : RecyclerView.Adapter<SeedDetailsAdapter.SeedDetailsViewHolder>(){
 
-    private var seedDetailsList: List<SeedDetectionDTO> = emptyList()
+class SeedDetailsAdapter(
+    private val onItemClick: (SeedDetectionDTO) -> Unit
+) : RecyclerView.Adapter<SeedDetailsAdapter.SeedDetailsViewHolder>(){
+
+    private var seedDetectionsList: List<SeedDetectionDTO> = emptyList()
 
     fun submitSeedDetailsList(seedDeta: List<SeedDetectionDTO>) {
-        seedDetailsList = seedDeta
+        seedDetectionsList = seedDeta
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SeedDetailsViewHolder {
@@ -21,14 +24,24 @@ class SeedDetailsAdapter : RecyclerView.Adapter<SeedDetailsAdapter.SeedDetailsVi
         return SeedDetailsViewHolder(itemView)
     }
 
-    override fun getItemCount(): Int = seedDetailsList.size
+    override fun getItemCount(): Int = seedDetectionsList.size
 
     override fun onBindViewHolder(holder: SeedDetailsViewHolder, position: Int) {
-        val currentSeedDetails = seedDetailsList[position]
+        val currentSeedDetails = seedDetectionsList[position]
         holder.bind(currentSeedDetails)
     }
 
     inner class SeedDetailsViewHolder(itemView:View) : RecyclerView.ViewHolder(itemView) {
+        init {
+            itemView.setOnClickListener {
+                val position = adapterPosition
+                if (position != RecyclerView.NO_POSITION) {
+                    val currentDetection = seedDetectionsList[position]
+                    onItemClick.invoke(currentDetection)
+                }
+            }
+        }
+
         fun bind(seedDetails: SeedDetectionDTO) {
             val seedDetectionThumbnail = itemView.findViewById<ImageView>(R.id.seedDetectionImage)
             val seedDetectionArea = itemView.findViewById<TextView>(R.id.seedDetectionArea)

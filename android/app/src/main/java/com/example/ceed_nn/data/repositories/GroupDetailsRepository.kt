@@ -5,15 +5,15 @@ import com.example.ceed_nn.data.stuctures.SeedClassDTO
 import com.example.ceed_nn.data.stuctures.SeedDetectionDTO
 import com.example.ceed_nn.data.stuctures.SeedGroupDTO
 import com.example.ceed_nn.util.JsonUtil
-import com.example.ceed_nn.util.NumUtil
 
-class DetectionDetailsRepository(private val context: Context) {
+class GroupDetailsRepository(private val context: Context) {
     private var detections: List<SeedDetectionDTO> = emptyList()
     private var classes: List<SeedClassDTO> = emptyList()
     private var seedGroups: List<SeedGroupDTO> = emptyList()
 
     private var totalArea: Float = 0f
     private var totalMass: Float = 0f
+    private var totalSeedNumber: Int = 0
 
     fun getSeedGroups(): List<SeedGroupDTO>  {
         return seedGroups
@@ -27,9 +27,14 @@ class DetectionDetailsRepository(private val context: Context) {
         return totalMass
     }
 
+    fun getTotalSeedNumber(): Int {
+        return totalSeedNumber
+    }
+
     fun setDetections(detec: List<SeedDetectionDTO>) {
         totalArea = 0f
         totalMass = 0f
+        totalSeedNumber = 0
         detections = detec
         // .toMutableList().filter { it.classId != 0 }
     }
@@ -61,7 +66,7 @@ class DetectionDetailsRepository(private val context: Context) {
             areaReference = classes[detection.classId].areaScale[scaleSize - 1]
             massReference = classes[detection.classId].massScale[scaleSize - 1]
         } else
-            for (i in 1 until (scaleSize - 1)) {
+            for (i in 0 until (scaleSize - 1)) {
                 val lowerAreaScaleValue = classes[detection.classId].areaScale[i]
                 val upperAreaScaleValue = classes[detection.classId].areaScale[i + 1]
                 val lowerMassScaleValue = classes[detection.classId].massScale[i]
@@ -86,7 +91,7 @@ class DetectionDetailsRepository(private val context: Context) {
 
     fun calculatePhysicalPropertiesToGroups() {
         val result = mutableListOf<SeedGroupDTO>()
-        for (i in 0 until classes.size) { // Visszaváltani egyre ha nem kell referencia osztály!!!!!!!
+        for (i in 1 until classes.size) { // Visszaváltani egyre ha nem kell referencia osztály!!!!!!!
             val classDetections = detections.filter { it.classId == classes[i].index }
             if (classDetections.size <= 0)
                 continue
@@ -94,21 +99,24 @@ class DetectionDetailsRepository(private val context: Context) {
             var groupMass = 0f
             for (j in 0 until classDetections.size){
                 val seedArea = classDetections[j].seedArea
-                val seedMass = calculateSeedMassByScale(classDetections[j])
+//                val seedMass = calculateSeedMassByScale(classDetections[j])
+                val seedMass = calculateSeedMassByAvg(classDetections[j])
 
-                classDetections[j].seedMass = NumUtil.floatRoundTo(seedMass, 3)
+                classDetections[j].seedMass = seedMass
 
                 groupArea += seedArea
                 groupMass += seedMass
             }
 
             val newSeedGroup = SeedGroupDTO(
-                index = classes[i].index,
+                id = classes[i].index,
                 name = classes[i].name,
                 seeds = classDetections,
-                photo = classDetections[0].photo,
-                totalArea = NumUtil.floatRoundTo(groupArea, 3),
-                totalMass = NumUtil.floatRoundTo(groupMass, 3)
+                groupArea = groupArea,
+                groupMass = groupMass,
+                percentageArea = 0f,
+                percentageMass = 0f,
+                percentageSeedNumber = 0f
             )
 
             result.add(newSeedGroup)
@@ -119,5 +127,15 @@ class DetectionDetailsRepository(private val context: Context) {
             }
         }
         seedGroups = result
+        for (i in 0 until seedGroups.size)
+            totalSeedNumber += seedGroups[i].seeds.size
+    }
+
+    fun fetchPercentageRatios() {
+        for (i in 0 until seedGroups.size) {
+            seedGroups[i].percentageArea = seedGroups[i].groupArea / totalArea * 100f
+            seedGroups[i].percentageMass = seedGroups[i].groupMass / totalMass * 100f
+            seedGroups[i].percentageSeedNumber = seedGroups[i].seeds.size.toFloat() / totalSeedNumber.toFloat() * 100f
+        }
     }
 }
