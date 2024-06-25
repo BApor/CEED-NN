@@ -1,6 +1,6 @@
 import os
 
-folder_path = '/Volumes/APORKA SSD/Allamvizsga/Program/CEED-NN'
+folder_path = '/Volumes/APORKA SSD/Allamvizsga/Program'
 deleted_files_count = 0
 
 # Walk through the directory and its subdirectories

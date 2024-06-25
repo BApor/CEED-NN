@@ -103,7 +103,7 @@ class CameraFragment : Fragment() {
     private fun configureSpinner() {
         val spinner = binding.modelSpinner
 
-        val modelList = arrayOf<String?>("YOLOv8", "YOLOv5", "YOLOv3")
+        val modelList = arrayOf<String?>("YOLOv8", "YOLOv6", "YOLOv5", "YOLOv3")
 
         val mArrayAdapter = ArrayAdapter<Any?>(requireContext(), R.layout.item_spinner, modelList)
         mArrayAdapter.setDropDownViewResource(R.layout.item_spinner)
@@ -181,19 +181,18 @@ class CameraFragment : Fragment() {
         if (isAdded && view != null)
             requireActivity().runOnUiThread {
                 if (isBBoxesEnabled)
-                    drawBoundingBoxes(imageProxy, appViewModel.detections)
+                    drawBoundingBoxes(appViewModel.detections)
                 else
                     binding.imageView.setImageResource(0)
 
                 val modelTime = appViewModel.time
                 binding.msTextView.text = "${modelTime.toFloat()} ms"
-                // binding.fpsTextView.setText("${1000.0 / modelTime.toFloat()} fps")
             }
 
         imageProxy.close()
     }
 
-    private fun drawBoundingBoxes(imageProxy: ImageProxy, detections: List<SeedDetectionDTO>) {
+    private fun drawBoundingBoxes(detections: List<SeedDetectionDTO>) {
         val bitmap = Bitmap.createBitmap(1080, 1088, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
 
@@ -216,8 +215,8 @@ class CameraFragment : Fragment() {
             val classTextY = detections[i].boundingBox.top.toFloat() - 10
             canvas.drawText(classText, classTextX, classTextY, textPaint)
 
-            val indexTextX = detections[i].boundingBox.right.toFloat() - 40
-            val indexTextY = detections[i].boundingBox.top.toFloat() - 10
+            val indexTextX = detections[i].boundingBox.right.toFloat()
+            val indexTextY = detections[i].boundingBox.top.toFloat()
             canvas.drawText(i.toString(), indexTextX, indexTextY, textPaint)
         }
 

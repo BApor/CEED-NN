@@ -26,6 +26,8 @@ class DetectionEngine(context: Context, modelName: String) {
             pthFile = "yolov3_xbs.pth"
         if (modelName == "YOLOv5")
             pthFile = "yolov5_xbs.pth"
+        if (modelName == "YOLOv6")
+            pthFile = "yolov6_xbs.pth"
         if (modelName == "YOLOv8")
             pthFile = "yolov8_xbs.pth"
 

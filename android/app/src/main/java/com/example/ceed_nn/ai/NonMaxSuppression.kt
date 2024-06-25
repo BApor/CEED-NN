@@ -54,8 +54,6 @@ object NonMaxSuppression {
                     classId = classes[i].toInt(),
                     seedArea = 0f,
                     photo = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888),
-                    seedLength = 0f,
-                    seedWidth = 0f,
                     seedMass = 0f
                     )
                 result.add(detection)

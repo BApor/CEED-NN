@@ -78,26 +78,13 @@
         android:id="@+id/msTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="108dp"
+        android:layout_marginTop="144dp"
         android:layout_marginEnd="24dp"
         android:text="ms"
         android:textColor="@color/white"
         android:textSize="26sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textureView"
-        tools:ignore="MissingConstraints" />
-
-    <TextView
-        android:id="@+id/fpsTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
-        android:layout_marginEnd="24dp"
-        android:text="fps"
-        android:textColor="@color/white"
-        android:textSize="26sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/msTextView"
         tools:ignore="MissingConstraints" />
 
 

@@ -17,7 +17,7 @@ class SeedDetailsAdapter : RecyclerView.Adapter<SeedDetailsAdapter.SeedDetailsVi
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SeedDetailsViewHolder {
-        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_detection, parent, false)
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.item_seed, parent, false)
         return SeedDetailsViewHolder(itemView)
     }
 
@@ -32,12 +32,10 @@ class SeedDetailsAdapter : RecyclerView.Adapter<SeedDetailsAdapter.SeedDetailsVi
         fun bind(seedDetails: SeedDetectionDTO) {
             val seedDetectionThumbnail = itemView.findViewById<ImageView>(R.id.seedDetectionImage)
             val seedDetectionArea = itemView.findViewById<TextView>(R.id.seedDetectionArea)
-            val seedDetectionSize = itemView.findViewById<TextView>(R.id.seedDetectionSize)
             val seedDetectionMass = itemView.findViewById<TextView>(R.id.seedDetectionMass)
 
             seedDetectionThumbnail.setImageBitmap(seedDetails.photo)
             seedDetectionArea.text = "${seedDetails.seedArea} mm^2"
-            seedDetectionSize.text = "${seedDetails.seedLength} x ${seedDetails.seedLength} mm"
             seedDetectionMass.text = "${seedDetails.seedMass} g"
         }
     }

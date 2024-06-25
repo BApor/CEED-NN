@@ -1,9 +1,7 @@
 package com.example.ceed_nn.view
 
-import android.app.Application
 import android.content.Context
 import androidx.camera.core.ImageProxy
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.ViewModel
 import com.example.ceed_nn.data.repositories.DetectionDetailsRepository
 import com.example.ceed_nn.data.repositories.DetectionRepository
@@ -15,8 +13,10 @@ class AppViewModel : ViewModel(){
     private lateinit var detectionDetailsRepository: DetectionDetailsRepository
 
     var detections: List<SeedDetectionDTO> = emptyList()
-    var referenceScale: Float  = 0f
     var time = 0.0
+
+    private var areaRatio: Float  = 0f
+    private var lengthRatio: Float  = 0f
 
     var seedGroups: List<SeedGroupDTO> = emptyList()
     var totalArea: Float = 0f
@@ -39,11 +39,12 @@ class AppViewModel : ViewModel(){
 
     fun fetchDetections() {
         detectionRepository.fetchDetections()
-        detectionRepository.calculateReferenceScale()
+        detectionRepository.calculatePhysicalRatios()
+        areaRatio = detectionRepository.getAreaRatio()
+        lengthRatio = detectionRepository.getLengthRatio()
+        if (areaRatio == 0f)
+            return
         detectionRepository.calculateSeedAreas()
-        val reference = detectionRepository.getReferenceScale()
-        if (reference != 0f)
-            referenceScale = detectionRepository.getReferenceScale()
         detections = detectionRepository.getDetections()
         time = detectionRepository.getTime()
     }

@@ -47,7 +47,9 @@ class DetailsFragment : Fragment() {
         appViewModel.fetchDetectionDetails()
         appViewModel.fetchTotalProperties()
 
-        view.findViewById<TextView>(R.id.textView).text= "${NumUtil.floatRoundTo(appViewModel.totalArea, 2)} mm^2"
+        view.findViewById<TextView>(R.id.totalArea).text= "${NumUtil.floatRoundTo(appViewModel.totalArea, 2)} mm^2"
+        view.findViewById<TextView>(R.id.totalMass).text= "${NumUtil.floatRoundTo(appViewModel.totalMass, 2)} g"
+
         adapter.submitSeedGroupList(appViewModel.seedGroups)
     }
 

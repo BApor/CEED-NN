@@ -30,16 +30,63 @@ class DetectionDetailsRepository(private val context: Context) {
     fun setDetections(detec: List<SeedDetectionDTO>) {
         totalArea = 0f
         totalMass = 0f
-        detections = detec.toMutableList().filter { it.classId != 0 }
+        detections = detec
+        // .toMutableList().filter { it.classId != 0 }
     }
 
     fun fetchSeedClassesFromJSON() {
         classes = JsonUtil.parseSeedClassesJSON(context)
+        for (i in 0 until classes.size){
+            if(classes[i].areaScale.size == 0)
+                continue
+
+            val pairs = classes[i].areaScale.zip(classes[i].massScale)
+            val sortedPairs = pairs.sortedBy { it.first }
+
+            classes[i].areaScale = sortedPairs.map { it.first }.toList()
+            classes[i].massScale = sortedPairs.map { it.second }.toList()
+        }
+    }
+
+    fun calculateSeedMassByScale(detection: SeedDetectionDTO): Float {
+        var areaReference = 0f
+        var massReference = 0f
+        val scaleSize = classes[detection.classId].massScale.size
+        if (scaleSize == 0)
+            return 0f
+        if (detection.seedArea <= classes[detection.classId].areaScale[0]) {
+            areaReference = classes[detection.classId].areaScale[0]
+            massReference = classes[detection.classId].massScale[0]
+        } else if (detection.seedArea >= classes[detection.classId].areaScale[scaleSize - 1]) {
+            areaReference = classes[detection.classId].areaScale[scaleSize - 1]
+            massReference = classes[detection.classId].massScale[scaleSize - 1]
+        } else
+            for (i in 1 until (scaleSize - 1)) {
+                val lowerAreaScaleValue = classes[detection.classId].areaScale[i]
+                val upperAreaScaleValue = classes[detection.classId].areaScale[i + 1]
+                val lowerMassScaleValue = classes[detection.classId].massScale[i]
+                val upperMassScaleValue = classes[detection.classId].massScale[i + 1]
+                if (detection.seedArea in lowerAreaScaleValue..upperAreaScaleValue){
+                    if ((detection.seedArea - lowerAreaScaleValue) <= (upperAreaScaleValue - detection.seedArea)) {
+                        areaReference = lowerAreaScaleValue
+                        massReference = lowerMassScaleValue
+                    } else {
+                        areaReference = upperAreaScaleValue
+                        massReference = upperMassScaleValue
+                    }
+                    break
+                }
+            }
+        return (detection.seedArea * (massReference / areaReference))
+    }
+
+    fun calculateSeedMassByAvg(detection: SeedDetectionDTO): Float {
+        return (detection.seedArea * (classes[detection.classId].avgMass / classes[detection.classId].avgArea))
     }
 
     fun calculatePhysicalPropertiesToGroups() {
         val result = mutableListOf<SeedGroupDTO>()
-        for (i in 1 until classes.size) {
+        for (i in 0 until classes.size) { // Visszaváltani egyre ha nem kell referencia osztály!!!!!!!
             val classDetections = detections.filter { it.classId == classes[i].index }
             if (classDetections.size <= 0)
                 continue
@@ -47,11 +94,9 @@ class DetectionDetailsRepository(private val context: Context) {
             var groupMass = 0f
             for (j in 0 until classDetections.size){
                 val seedArea = classDetections[j].seedArea
-                val seedMass = seedArea * classes[i].massScale
+                val seedMass = calculateSeedMassByScale(classDetections[j])
 
-                classDetections[j].seedMass = NumUtil.floatRoundTo(seedMass, 2)
-                classDetections[j].seedLength = NumUtil.floatRoundTo(seedArea * classes[i].lengthScale, 2)
-                classDetections[j].seedWidth = NumUtil.floatRoundTo(seedArea * classes[i].widthScale, 2)
+                classDetections[j].seedMass = NumUtil.floatRoundTo(seedMass, 3)
 
                 groupArea += seedArea
                 groupMass += seedMass
@@ -62,14 +107,16 @@ class DetectionDetailsRepository(private val context: Context) {
                 name = classes[i].name,
                 seeds = classDetections,
                 photo = classDetections[0].photo,
-                totalArea = NumUtil.floatRoundTo(groupArea, 2),
-                totalMass = NumUtil.floatRoundTo(groupMass, 2)
+                totalArea = NumUtil.floatRoundTo(groupArea, 3),
+                totalMass = NumUtil.floatRoundTo(groupMass, 3)
             )
 
             result.add(newSeedGroup)
 
-            totalArea += groupArea
-            totalMass += groupMass
+            if (i > 0){
+                totalArea += groupArea
+                totalMass += groupMass
+            }
         }
         seedGroups = result
     }

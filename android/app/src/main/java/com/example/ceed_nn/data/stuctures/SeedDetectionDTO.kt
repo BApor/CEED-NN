@@ -9,7 +9,5 @@ data class SeedDetectionDTO(
     var score: Float,
     var photo: Bitmap,
     var seedArea: Float,
-    var seedLength: Float,
-    var seedWidth: Float,
     var seedMass: Float
 )
