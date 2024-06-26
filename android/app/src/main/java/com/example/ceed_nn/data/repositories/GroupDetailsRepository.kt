@@ -36,7 +36,6 @@ class GroupDetailsRepository(private val context: Context) {
         totalMass = 0f
         totalSeedNumber = 0
         detections = detec
-        // .toMutableList().filter { it.classId != 0 }
     }
 
     fun fetchSeedClassesFromJSON() {
