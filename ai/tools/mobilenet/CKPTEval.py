@@ -5,6 +5,8 @@ import torchvision
 from PIL import Image
 from torchvision import transforms
 
+# PROBALKOZASOK AZ OPENVINO FORMATUM TORCHSCRIPT FORMATUM LEMENTESERE SIKERTELENUL
+
 
 def image_to_tensor(image_path, target_size=(992, 736)):
     image = Image.open(image_path).convert("RGB")

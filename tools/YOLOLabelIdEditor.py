@@ -1,5 +1,8 @@
 import os
 
+# MIVEL A CVAT NEHA NEM A MEGFELELO ID-VAL METETTE LE AZ EGYES CIMKEKET
+# EZZEL A SZKRIPTTEL JAVITOTTAM KI
+
 # Parameters
 
 lbls_path = "C:/Apor/MTDK/ai/datasets/ultralytics_dataset/labels/train/Sweet_Corn_9"

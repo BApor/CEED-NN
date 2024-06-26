@@ -1,5 +1,7 @@
 import json
 
+# COCO TANITOHALMAZ CIMKE ID SZERKESZTESE
+
 # Parameters
 
 jsonPath = '/Volumes/APORKA SSD/Allamvizsga/Docker/train/datasets/yolo_dataset/annotations/instances_01.json'

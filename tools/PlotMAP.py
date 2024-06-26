@@ -1,6 +1,8 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
+# A MOBILENETEK PONTOSSAGI DIAGRAMJAINAK ELKESZITESEHEZ HASZNALTAM
+
 # Load the CSV file
 csv_path = '/Volumes/APORKA SSD/Allamvizsga/Eredmenyek/openvino/mobilenetssd/precission.csv'  # Replace with the actual path to your CSV file
 data = pd.read_csv(csv_path, delimiter=';')

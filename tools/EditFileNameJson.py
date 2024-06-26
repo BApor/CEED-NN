@@ -1,6 +1,9 @@
 import json
 import os
 
+# COCO TANITOHALMAZ SZERKESZTESEKOR HASZNALTAM, HOGY A FENYKEPEK PONTOS 
+# UTVONALAT MEGHATAROZZAM
+
 def update_file_names(json_file_path, image_directory):
     # Load the JSON data from the file
     with open(json_file_path, 'r') as f:
