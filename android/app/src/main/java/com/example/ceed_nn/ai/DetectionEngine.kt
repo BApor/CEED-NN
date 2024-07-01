@@ -61,8 +61,6 @@ class DetectionEngine(context: Context, modelName: String) {
             true
         )
 
-        val startTime = System.nanoTime()
-
         val inputTensor = TensorImageUtils.bitmapToFloat32Tensor(
             resizedBitmap,
             PrePostProcessor.NO_MEAN_RGB,
@@ -70,6 +68,8 @@ class DetectionEngine(context: Context, modelName: String) {
         )
 
         var x: IValue = IValue.from(0)
+
+        val startTime = System.nanoTime()
 
         try{
             val (_x, _, _) = model.forward(IValue.from(inputTensor)).toTuple()

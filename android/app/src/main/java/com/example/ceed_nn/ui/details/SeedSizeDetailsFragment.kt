@@ -15,9 +15,6 @@ import com.example.ceed_nn.view.AppViewModel
 
 class SeedSizeDetailsFragment : Fragment() {
 
-    private var _binding: FragmentSeedSizeDetailsBinding? = null
-    private val binding get() = _binding!!
-
     private lateinit var appViewModel: AppViewModel
 
     override fun onCreateView(
@@ -25,7 +22,6 @@ class SeedSizeDetailsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentSeedSizeDetailsBinding.inflate(inflater, container, false)
         appViewModel = ViewModelProvider(requireActivity()).get(AppViewModel::class.java)
         return inflater.inflate(R.layout.fragment_seed_size_details, container, false)
     }

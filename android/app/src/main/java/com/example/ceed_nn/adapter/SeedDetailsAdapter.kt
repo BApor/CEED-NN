@@ -13,10 +13,10 @@ class SeedDetailsAdapter(
     private val onItemClick: (SeedDetectionDTO) -> Unit
 ) : RecyclerView.Adapter<SeedDetailsAdapter.SeedDetailsViewHolder>(){
 
-    private var seedDetectionsList: List<SeedDetectionDTO> = emptyList()
+    private var seedDetailsList: List<SeedDetectionDTO> = emptyList()
 
     fun submitSeedDetailsList(seedDeta: List<SeedDetectionDTO>) {
-        seedDetectionsList = seedDeta
+        seedDetailsList = seedDeta
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SeedDetailsViewHolder {
@@ -24,10 +24,10 @@ class SeedDetailsAdapter(
         return SeedDetailsViewHolder(itemView)
     }
 
-    override fun getItemCount(): Int = seedDetectionsList.size
+    override fun getItemCount(): Int = seedDetailsList.size
 
     override fun onBindViewHolder(holder: SeedDetailsViewHolder, position: Int) {
-        val currentSeedDetails = seedDetectionsList[position]
+        val currentSeedDetails = seedDetailsList[position]
         holder.bind(currentSeedDetails)
     }
 
@@ -36,7 +36,7 @@ class SeedDetailsAdapter(
             itemView.setOnClickListener {
                 val position = adapterPosition
                 if (position != RecyclerView.NO_POSITION) {
-                    val currentDetection = seedDetectionsList[position]
+                    val currentDetection = seedDetailsList[position]
                     onItemClick.invoke(currentDetection)
                 }
             }

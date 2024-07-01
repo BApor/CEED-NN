@@ -56,8 +56,4 @@ class DetailsFragment : Fragment() {
             bundleOf("seedGroupId" to seedGroup.id)
         )
     }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-    }
 }

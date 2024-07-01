@@ -75,7 +75,7 @@ class AppViewModel : ViewModel(){
         totalNumber = groupDetailsRepository.getTotalSeedNumber()
     }
 
-    // Seed Size Details Fragment (size on 4 diagonals)
+    // Seed Size Details Fragment (size on 2 diagonals)
 
     fun fetchSeedSizeDetails(seedDetectionId: Int, seedDetectionClassId: Int) {
         seedSizeDetailsRepository.setLr(lengthRatio)

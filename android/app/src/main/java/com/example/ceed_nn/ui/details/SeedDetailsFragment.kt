@@ -20,8 +20,6 @@ import com.example.ceed_nn.view.AppViewModel
 
 class SeedDetailsFragment : Fragment() {
 
-    private var _binding: FragmentSeedDetailsBinding? = null
-
     private lateinit var appViewModel: AppViewModel
 
     override fun onCreateView(
@@ -29,7 +27,6 @@ class SeedDetailsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentSeedDetailsBinding.inflate(inflater, container, false)
         appViewModel = ViewModelProvider(requireActivity()).get(AppViewModel::class.java)
         return inflater.inflate(R.layout.fragment_seed_details, container, false)
     }

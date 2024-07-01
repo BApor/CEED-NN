@@ -26,29 +26,4 @@ class SplashActivity : AppCompatActivity() {
             finish()
         }, SPLASH_TIMEOUT)
     }
-
-    override fun onStart() {
-        super.onStart()
-        Log.d(TAG, "onStart: SplashActivity started.")
-    }
-
-    override fun onResume() {
-        super.onResume()
-        Log.d(TAG, "onResume: SplashActivity resumed.")
-    }
-
-    override fun onPause() {
-        super.onPause()
-        Log.d(TAG, "onPause: SplashActivity paused.")
-    }
-
-    override fun onStop() {
-        super.onStop()
-        Log.d(TAG, "onStop: SplashActivity stopped.")
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.d(TAG, "onDestroy: SplashActivity destroyed.")
-    }
 }

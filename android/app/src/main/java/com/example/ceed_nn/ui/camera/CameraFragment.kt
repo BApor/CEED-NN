@@ -35,10 +35,11 @@ import com.example.ceed_nn.view.AppViewModel
 import com.example.ceed_nn.data.stuctures.SeedDetectionDTO
 
 class CameraFragment : Fragment() {
-    private lateinit var cameraControl: CameraControl
 
     private var _binding: FragmentCameraBinding? = null
     private val binding get() = _binding!!
+
+    private lateinit var cameraControl: CameraControl
     private lateinit var cameraExecutor: ExecutorService
 
     private var isFlashOn = false
