@@ -188,6 +188,7 @@ class CameraFragment : Fragment() {
 
                 val modelTime = appViewModel.time
                 binding.msTextView.text = "${modelTime.toFloat()} ms"
+                Log.d("NNSPEED", "${modelTime.toFloat()}")
             }
 
         imageProxy.close()

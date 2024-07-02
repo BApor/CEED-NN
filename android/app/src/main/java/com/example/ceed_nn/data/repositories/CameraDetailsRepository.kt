@@ -19,7 +19,7 @@ class CameraDetailsRepository(private var context: Context) {
     private lateinit var bestReference: SeedDetectionDTO
 
     private var referenceCounter = 0
-    private val referenceNumber = 5
+    private val referenceNumber = 1
 
     private var areaRatio = 0f
     private var newAreaRatio = 0f

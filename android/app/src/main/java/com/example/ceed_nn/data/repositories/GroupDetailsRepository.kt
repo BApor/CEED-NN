@@ -98,8 +98,8 @@ class GroupDetailsRepository(private val context: Context) {
             var groupMass = 0f
             for (j in 0 until classDetections.size){
                 val seedArea = classDetections[j].seedArea
-//                val seedMass = calculateSeedMassByScale(classDetections[j])
-                val seedMass = calculateSeedMassByAvg(classDetections[j])
+                val seedMass = calculateSeedMassByScale(classDetections[j])
+//                val seedMass = calculateSeedMassByAvg(classDetections[j])
 
                 classDetections[j].seedMass = seedMass
 
